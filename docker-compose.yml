@@ -1,0 +1,25 @@
+services:
+  java-dev:
+    image: openjdk:latest
+    container_name: java-backend-container 
+    volumes:
+      - ./src/:/opt/src
+    links:
+      - mysql-dev
+  mysql-dev:
+    image: mysql:latest
+    container_name: mysql-db-container
+    ports: 
+      - 6603:3306
+    environment: 
+      MYSQL_ROOT_PASSWORD: # set and remove password. Dont push
+    volumes:
+      - /storage/docker/mysql-data:/var/lib/mysql
+  adminer:
+    image: adminer
+    container_name: adminer-tool
+    restart: always
+    ports:
+      - 8080:8080
+    links:
+      - mysql-dev
