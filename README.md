@@ -16,21 +16,30 @@ Make sure to commit as often as possible when working. A large amount of small c
 
 # Docker Flow
 
-## Setup
+With the way the repository is set up all instructions to build the project are included in the docker-copose.yml which then builds each container's respective Dockerfile 
 
-1. Have docker-compose.yml in directory
-2. run commands
+## Build Rotation
+
+1. Build
+2. Start
+3. Make changes
+4. Rebuild
+5. Test
+	* if not done go back to 3
+6. Shutdown
+
+### Example
 
 ``` bash
-docker-compose build --no-cache
-docker-compose up -d 
+docker-compose build --no-cache # 1 Build
+docker-compose up -d # 2 Start
+# Code changes are happening
+docker-compose build --no-cache # 4 Rebuild
+# Tests are being run
+docker-compose down # 6 shutdown the containers
 ```
-
-## Shutdown
-
-```bash
-docker-compose down
-```
+NOTE: 
+* when building the --no-cache flag is important so that the all the changes are actually brought in when building
 
 ## Container Set Up
 
