@@ -1,32 +1,29 @@
 services:
-  web-dev:
-    build: ./Web/
-    container_name: web-dev-container
-    ports:
-      - 8080:80
-    links:
-      - java-dev
-  java-dev:
-    build: ./Java/
-    container_name: java-backend-container 
+  python-dev:
+    container_name: flask-server
+    build: 
+      context: ./app
+      dockerfile: Dockerfile
     volumes:
-      - ./Java/src/:/opt/src
-    links:
-      - mysql-dev
+      - ./app:/var/app/flask_app
+    ports:
+      - "8000:8000"
   mysql-dev:
     build: ./DB/
     container_name: mysql-db-container
     ports: 
       - 6603:3306
     environment: 
-      MYSQL_ROOT_PASSWORD: # set and remove password. Dont push
+      MYSQL_ROOT_PASSWORD: "root" # set and remove password. Dont push
     volumes:
-      - ./DB/:/var/lib/mysql
+      - /storage/docker/mysql-datadirectory/:/var/lib/mysql
   adminer:
     image: adminer
     container_name: adminer-tool
     restart: always
     ports:
-      - 8000:8080
+      - 8080:8080
     links:
       - mysql-dev
+  volumes:
+    database-folder:
