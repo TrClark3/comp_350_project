@@ -1,4 +1,4 @@
-FROM python:3.7.5-slim
+FROM python:latest
 RUN mkdir -p /var/app/flask_app
 WORKDIR /var/app/flask_app
 COPY requirements.txt /var/app/flask_app
