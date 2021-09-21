@@ -1,6 +1,4 @@
 Flask
-Flask-Migrate
-Flask-Script
 mysql-connector-python
 Flask-SQLAlchemy
 gunicorn
