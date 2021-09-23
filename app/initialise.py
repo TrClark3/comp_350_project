@@ -1,4 +1,7 @@
 class Initialise():
+    '''
+        Takes our configuration for the database to connect
+    '''
     def db(self, app):
         app.config.from_object("config.Config")
         app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://{}:{}@{}/{}'.format(
