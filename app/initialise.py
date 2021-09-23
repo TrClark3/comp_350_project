@@ -1,7 +1,7 @@
 """
 Initialise
     Takes Config's URI info
-    configures the Flask app
+    configures the Flask app to simply the db instance
     applies it to the Flask app
 """
 

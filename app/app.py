@@ -16,12 +16,11 @@ api = Api(app)
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
+
 # create db structures
-
-
 class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(32), unique=True)
+    username = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(32))
     f_name = db.Column(db.String(32))
     l_name = db.Column(db.String(32))
@@ -40,9 +39,10 @@ db.create_all()
 
 
 # allows for easy JSON and HATEOAS strucutre
-class UsersSchema(ma.Schema):
+class UsersSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
-        fields = ('user_id', 'username', 'password', 'f_name', 'l_name', 'age')
+        model = User
+        include_fk = True
 
 
 user_schema = UsersSchema()
@@ -50,6 +50,7 @@ users_schema = UsersSchema(many=True)
 
 
 # Api (GET, POST, PUT, DELETE) pertaining to Users
+# Each method takes care of validation
 class UserManager(Resource):
     @staticmethod
     def get():
@@ -72,7 +73,7 @@ class UserManager(Resource):
         last_name = request.json['l_name']
         age = request.json['age']
 
-        user = User(username,password,first_name,last_name,age)
+        user = User(username, password, first_name, last_name, age)
         db.session.add(user)
         db.session.commit()
 
@@ -88,7 +89,7 @@ class UserManager(Resource):
             user_id = None
 
         if not user_id:
-            return jsonify({ 'Message': 'Must provide the user ID'})
+            return jsonify({'Message': 'Must provide the user ID'})
 
         user = User.query.get(user_id)
         username = request.json['username']
@@ -123,7 +124,7 @@ class UserManager(Resource):
         db.session.commit()
 
         return jsonify({
-            'Message': f'User {str(id)} deleted.'
+            'Message': f'User {str(user_id)} deleted.'
         })
 
 
