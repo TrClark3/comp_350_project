@@ -69,7 +69,7 @@ NOTE:
 |   |                                         |   |  |                  |
 |   |           Volumes                       |   |  |                  |
 |   |            mysql:                       |   |  |                  |
-|   |             /var/lib/mysql              |   |  |                  |
+|   |             /var/lib/mysql---------------------->/databse-folder/ |
 |   |                                         |   |  |                  |
 |   +-----------------------------------------+   |  |                  |
 |                                                 |  |                  |
@@ -82,5 +82,5 @@ NOTE:
 2. Flask-Restful -> Simplifies Flask's REST functionality
 3. Flask-SQLAlchemy -> Simplifies python SQL functionality 
 4. mysql-connector-python -> Connector drivers from python code to an SQL databse
-. Gunicorn ->
-. marshmallow -> 
+5. Flask-Marshmallow -> serialization that works with Flask-SQLAlchemy  
+6. Gunicorn -> Runs the web Listener for a WGSI application
