@@ -4,12 +4,19 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_restful import Resource, Api
 
+# Initialization
 app = Flask(__name__)
+
+# create db URI and pass through
 init = Initialise()
 app = init.db(app)
+
+# Init listener, sql functionality, and modeling schema
 api = Api(app)
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
+
+# create db structures
 
 
 class User(db.Model):
@@ -28,9 +35,11 @@ class User(db.Model):
         self.age = age
 
 
+# Uses Models to run create tables in database
 db.create_all()
 
 
+# allows for easy JSON and HATEOAS strucutre
 class UsersSchema(ma.Schema):
     class Meta:
         fields = ('user_id', 'username', 'password', 'f_name', 'l_name', 'age')
@@ -39,6 +48,8 @@ class UsersSchema(ma.Schema):
 user_schema = UsersSchema()
 users_schema = UsersSchema(many=True)
 
+
+# Api (GET, POST, PUT, DELETE) pertaining to Users
 class UserManager(Resource):
     @staticmethod
     def get():
@@ -71,13 +82,15 @@ class UserManager(Resource):
 
     @staticmethod
     def put():
-        try: id = request.args['id']
-        except Exception as _: id = None
+        try:
+            user_id = request.args['user_id']
+        except Exception as _:
+            user_id = None
 
-        if not id:
+        if not user_id:
             return jsonify({ 'Message': 'Must provide the user ID'})
 
-        user = User.query.get(id)
+        user = User.query.get(user_id)
         username = request.json['username']
         password = request.json['password']
         first_name = request.json['f_name']
@@ -97,13 +110,15 @@ class UserManager(Resource):
 
     @staticmethod
     def delete():
-        try: id = request.args['id']
-        except Exception as _: id = None
+        try:
+            user_id = request.args['user_id']
+        except Exception as _:
+            user_id = None
 
-        if not id:
+        if not user_id:
             return jsonify({'Message': 'Must provide the user ID'})
 
-        user = User.query.get(id)
+        user = User.query.get(user_id)
         db.session.delete(user)
         db.session.commit()
 
@@ -112,6 +127,7 @@ class UserManager(Resource):
         })
 
 
+# Links the whole UserManager class (all of its methods to the url /api/users
 api.add_resource(UserManager, '/api/users')
 
 if __name__ == '__main__':
