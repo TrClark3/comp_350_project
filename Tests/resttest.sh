@@ -13,15 +13,15 @@ curl -X GET http://localhost:8000/api/users
 
 echo ""
 echo "Test 3: Get a User"
-curl -X GET http://localhost:8000/api/users?id=2
+curl -X GET http://localhost:8000/api/users?user_id=2
 
 echo ""
 echo "Test 4: Update a user"
-curl  -H "Content-Type: application/json" -d '{	"username": "mi.ac@lobortis.co.uk",	"password": "YWR25ETU2MO",	"f_name": "Athena",	"l_name": "Bentley",	"age": 55}' -X PUT http://localhost:8000/api/users?id=2
+curl  -H "Content-Type: application/json" -d '{	"username": "mi.ac@lobortis.co.uk",	"password": "YWR25ETU2MO",	"f_name": "Athena",	"l_name": "Bentley",	"age": 55}' -X PUT http://localhost:8000/api/users?user_id=2
 
 echo ""
 echo "Test 5: Delete a user"
-curl -X DELETE http://localhost:8000/api/users?id=3
+curl -X DELETE http://localhost:8000/api/users?user_id=3
 
 echo ""
 echo "Test 6: End result"
