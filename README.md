@@ -84,3 +84,7 @@ NOTE:
 4. mysql-connector-python -> Connector drivers from python code to an SQL databse
 5. Flask-Marshmallow -> serialization that works with Flask-SQLAlchemy  
 6. Gunicorn -> Runs the web Listener for a WGSI application
+
+### Warning
+
+users (all undercase) databse must be created through adminer before the app can run
