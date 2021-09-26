@@ -1,0 +1,28 @@
+<!-- This is our sign-up page for collecting user info, app.py handles sending it to database -->
+{% extends 'base.html' %}
+
+{% block head %}
+<h2>Sign up page</h2>
+{% endblock %}
+
+{% block body %}
+    <form method="POST">
+        <p>
+            <label for="first">First Name</label>
+            <input id="first" name="firstname" type="text">
+        </p>
+        <p>
+            <label for="last">Last Name</label>
+            <input id="last" name="lastname" type="text">
+        </p>
+        <p>
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text">
+        </p>
+        <p>
+            <label for="password">Password</label>
+            <input id="password" name="password" type="text">
+        </p>
+        <input type="submit" value="Sign Me Up">
+    </form>
+{% endblock %}

@@ -1,5 +1,6 @@
+from flask.templating import render_template
 from initialise import Initialise
-from flask import Flask, request, jsonify, url_for
+from flask import Flask, request, jsonify, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_restful import Resource, Api
@@ -16,6 +17,9 @@ api = Api(app)
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 # create db structures
 class User(db.Model):
