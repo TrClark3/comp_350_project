@@ -21,6 +21,22 @@ ma = Marshmallow(app)
 def index():
     return render_template('index.html')
 
+@app.route('/sign-up', methods=['GET', 'POST'])
+def sign_up():
+    if request.method == 'POST':
+        
+        first_name = request.form['firstname']
+        last_name = request.form['lastname']
+
+        return redirect(url_for('thanks'))
+
+    # Render the sign-up page
+    return render_template('sign-up.html')
+
+@app.route('/thanks')
+def thanks():
+    return render_template('thanks.html')
+
 # create db structures
 class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
