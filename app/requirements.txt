@@ -1,0 +1,7 @@
+Flask
+Flask-SQLAlchemy
+Flask-Marshmallow
+Flask-Restful
+gunicorn
+mysql-connector-python
+marshmallow-sqlalchemy
