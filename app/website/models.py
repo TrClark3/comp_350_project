@@ -1,4 +1,4 @@
-from . import db, ma
+from website import db, ma
 
 
 # Models

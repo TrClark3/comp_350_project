@@ -1,7 +1,7 @@
 from flask import request, jsonify
-from .models import *
 from flask_restful import Resource
-from . import db
+from website import db
+from website.models import User, user_schema, users_schema
 
 
 class UserManager(Resource):
