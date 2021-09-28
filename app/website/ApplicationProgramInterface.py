@@ -1,7 +1,7 @@
 from flask import request, jsonify
 from .models import *
 from flask_restful import Resource
-from . import api
+from . import db
 
 
 class UserManager(Resource):
@@ -79,6 +79,3 @@ class UserManager(Resource):
         return jsonify({
             'Message': f'User {str(user_id)} deleted.'
         })
-
-
-api.add_resource(UserManager, '/api/users')
