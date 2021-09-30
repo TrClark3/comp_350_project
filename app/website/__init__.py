@@ -16,14 +16,13 @@ def create_app():
     init = Initialise()
     app = init.db(app)
 
-    api.init_app(app)
     ma.init_app(app)
     db.init_app(app)
 
     from .views import views
-    from website.ApplicationProgramInterface import UserManager
+    from website.ApplicationProgramInterface import userApi
 
-    api.add_resource(UserManager, '/api/users')
+    app.register_blueprint(userApi, url_prefix='/')
     app.register_blueprint(views, url_prefix='/')
 
     db.create_all(app=app)

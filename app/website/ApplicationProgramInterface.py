@@ -1,7 +1,10 @@
-from flask import request, jsonify
+from flask import Blueprint, request, jsonify
 from flask_restful import Resource
-from website import db
+
+from website import db, api
 from website.models import User, user_schema, users_schema
+
+userApi = Blueprint('userApi', __name__)
 
 
 class UserManager(Resource):
@@ -79,3 +82,6 @@ class UserManager(Resource):
         return jsonify({
             'Message': f'User {str(user_id)} deleted.'
         })
+
+
+api.add_resource(UserManager, '/api/users')
