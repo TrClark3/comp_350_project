@@ -47,7 +47,7 @@ def sign_up():
                         first=f_name, last=l_name, age=0)
         db.session.add(new_user)
         db.session.commit()
-        return redirect(url_for('thanks'))
+        return redirect(url_for('views.thanks'))
 
     # Render the sign-up page
     return render_template('sign-up.html')

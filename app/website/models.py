@@ -5,7 +5,7 @@ from website import db, ma
 class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True)
-    password = db.Column(db.String(32))
+    password = db.Column(db.String(100))
     f_name = db.Column(db.String(32))
     l_name = db.Column(db.String(32))
     age = db.Column(db.Integer)
