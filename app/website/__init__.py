@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-from flask_restful import Api
+from flask_restplus import Api
 
 db = SQLAlchemy()
 ma = Marshmallow()
@@ -16,13 +16,14 @@ def create_app():
     init = Initialise()
     app = init.db(app)
 
+    api.init_app(app)
     ma.init_app(app)
     db.init_app(app)
 
     from .views import views
-    from website.ApplicationProgramInterface import userApi
+    from website.ApplicationProgramInterface import userApi, UserManager
 
-    app.register_blueprint(userApi, url_prefix='/')
+    app.register_blueprint(userApi, url_prefix='/api')
     app.register_blueprint(views, url_prefix='/')
 
     db.create_all(app=app)
