@@ -1,7 +1,7 @@
 Flask
 Flask-SQLAlchemy
 Flask-Marshmallow
-Werkzeug==0.16.1
+Werkzeug
 gunicorn
 mysql-connector-python
 marshmallow-sqlalchemy
