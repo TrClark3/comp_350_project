@@ -21,7 +21,7 @@ def create_app():
     db.init_app(app)
 
     from .views import views
-    from website.ApplicationProgramInterface import userApi, UserManager
+    from website.ApplicationProgramInterface import userApi
 
     app.register_blueprint(userApi, url_prefix='/api')
     app.register_blueprint(views, url_prefix='/')
