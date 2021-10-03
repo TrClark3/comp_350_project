@@ -3,6 +3,7 @@ from website import db, ma
 
 # Models
 class User(db.Model):
+    # Structure
     user_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(100))
@@ -25,6 +26,5 @@ class UsersSchema(ma.SQLAlchemyAutoSchema):
         include_fk = True
 
 
-# Schemas init
 user_schema = UsersSchema()
 users_schema = UsersSchema(many=True)

@@ -27,6 +27,12 @@ def sign_up():
 
         # validate form data to fit in database. Commented out bc I need to import bootstrap but im too lazy rn
         # We should also validate the username is unique somehow
+        """
+            Technically since usernames are always unique in our database 
+            we would need to handle the case if the entered username is already 
+            in the database
+                        - Alessasndro
+        """
 
         # if (len(f_name) < 2 or len(f_name) > 32):
         #     flash('First Name must be between 2 and 32 characters.', category='error')
