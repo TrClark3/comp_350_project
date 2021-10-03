@@ -4,7 +4,7 @@ from website import db, ma
 # Models
 class User(db.Model):
     # Structure
-    user_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(100))
     f_name = db.Column(db.String(32))
@@ -19,10 +19,26 @@ class User(db.Model):
         self.age = age
 
 
+class Employee(db.Model):
+    emp_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    f_name = db.Column(db.String(50))
+    l_name = db.Column(db.String(50))
+
+    def __init__(self, firstname, lastname):
+        self.f_name = firstname
+        self.l_name = lastname
+
+
 # Schema
 class UsersSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = User
+        include_fk = True
+
+
+class EmployeesSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Employee
         include_fk = True
 
 

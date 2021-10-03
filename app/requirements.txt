@@ -1,7 +1,6 @@
 Flask
 Flask-SQLAlchemy
 Flask-Marshmallow
-Flask-Restplus
 Werkzeug==0.16.1
 gunicorn
 mysql-connector-python
