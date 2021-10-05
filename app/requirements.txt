@@ -1,7 +1,7 @@
 Flask
 Flask-SQLAlchemy
 Flask-Marshmallow
-Flask-Restful
+Werkzeug
 gunicorn
 mysql-connector-python
 marshmallow-sqlalchemy
