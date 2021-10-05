@@ -37,3 +37,8 @@ def sign_up():
 @views.route('/thanks')
 def thanks():
     return render_template('thanks.html')
+
+# Login Page. Uses login.html
+@views.route('/log-in', methods=['GET', 'POST'])
+def log_in():
+    return render_template('login.html')
