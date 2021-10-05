@@ -10,13 +10,11 @@ views = Blueprint('views', __name__)
 @views.route('/home')
 @views.route('/')
 def home():
-    title = "Home"
-    return render_template('index.html', title=title)
+    return render_template('index.html')
 
 # SignUp Page. Uses signUp.html
 @views.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
-    title = "Sign Up"
     # Handles POST method logic
     if request.method == 'POST':
         # collect form data, NOTE: age is odd to query in this context, should we consider deleting?
@@ -33,15 +31,13 @@ def sign_up():
         return redirect(url_for('views.thanks'))
 
     # Render the sign-up page
-    return render_template('sign-up.html', title=title)
+    return render_template('sign-up.html')
 
 @views.route('/thanks')
 def thanks():
-    title = "Thank you!"
-    return render_template('thanks.html', title=title)
+    return render_template('thanks.html')
 
 # Login Page. Uses login.html
 @views.route('/log-in', methods=['GET', 'POST'])
 def log_in():
-    title = "Log In"
-    return render_template('login.html', title=title)
+    return render_template('login.html')
