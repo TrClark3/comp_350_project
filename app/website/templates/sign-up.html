@@ -1,11 +1,9 @@
 <!-- This is our sign-up page for collecting user info, app.py handles sending it to database -->
 {% extends 'base.html' %}
 
-{% block head %}
-<h2>Sign up page</h2>
-{% endblock %}
+{% block title %} Sign Up {% endblock %}
 
-{% block body %}
+{% block content %}
     <form method="POST">
         <p>
             <label for="first">First Name</label>
