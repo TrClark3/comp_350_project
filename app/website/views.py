@@ -31,14 +31,20 @@ def sign_up():
                 l_name=l_name,
                 username=username)
 
+        # create new User
         new_user = User(username=username, password=password1,
                         first=f_name, last=l_name, age=0)
-        db.session.add(new_user)
-        db.session.commit()
-        return redirect(url_for('views.thanks'))
+        # Push to database
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for('views.thanks'))
+        except:
+            return "An error occured during sign up process..."
 
-    # Render the sign-up page
-    return render_template('sign-up.html')
+    else:
+        # Render the sign-up page
+        return render_template('sign-up.html')
 
 @views.route('/thanks')
 def thanks():
