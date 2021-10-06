@@ -24,6 +24,13 @@ def sign_up():
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
 
+        # Verify all form fields filled out, if not rerender sign-up, carrying over filled out fields (except password)
+        if not f_name or not l_name or not username or not password1 or not password2:
+            error_statement = "Please fill out all form fields."
+            return render_template('sign-up.html', error_statement=error_statement, f_name=f_name,
+                l_name=l_name,
+                username=username)
+
         new_user = User(username=username, password=password1,
                         first=f_name, last=l_name, age=0)
         db.session.add(new_user)
