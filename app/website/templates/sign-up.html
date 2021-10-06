@@ -7,6 +7,13 @@
 <div class="container" id="sign_up">
     <h4>Get Started Below</h4>
 
+    {% if error_statement %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{error_statement}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endif %}
+
     <form method="POST">
         <p>
             <input id="first" name="firstname" type="text" placeholder="First Name" value={{f_name}}>
@@ -22,9 +29,6 @@
         </p>
         <p>
             <input id="password2" name="password2" type="password" placeholder="Confirm Password">
-        </p>
-        <p>
-            {{error_statement}}
         </p>
         <button type="submit" class = "btn btn-secondary">Sign me up!</button>
     </form>
