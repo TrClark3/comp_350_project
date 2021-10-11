@@ -5,3 +5,7 @@ Werkzeug
 gunicorn
 mysql-connector-python
 marshmallow-sqlalchemy
+flask_login
+flask_wtf
+flask_bootstrap
+wtforms
