@@ -1,5 +1,8 @@
 from website import db, ma, login_manager
-from flask_login import UserMixin
+from flask_wtf import FlaskForm 
+from wtforms import StringField, PasswordField, BooleanField
+from wtforms.validators import InputRequired, Email, Length
+from flask_login import UserMixin, login_user, login_required, logout_user, current_user
 
 
 # Models
@@ -12,6 +15,10 @@ class User(UserMixin, db.Model):
     l_name = db.Column(db.String(32))
     age = db.Column(db.Integer)
 
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+
     def __init__(self, username, password, first, last, age):
         self.username = username
         self.password = password
@@ -19,9 +26,15 @@ class User(UserMixin, db.Model):
         self.l_name = last
         self.age = age
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+class LoginForm(FlaskForm):
+    username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
+    password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
+
+
+# class RegisterForm(FlaskForm):
+#     email = StringField('email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
+#     username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
+#     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
 
 class Employee(db.Model):
     emp_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
