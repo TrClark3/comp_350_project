@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from flask_bootstrap import Bootstrap
+
 
 from website import db
 from website.models import User
