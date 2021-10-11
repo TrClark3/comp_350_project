@@ -11,10 +11,10 @@ services:
       - ./DB/users.sql:/docker-entrypoint-initdb.d/users.sql
   python-dev:
     container_name: flask-server
-    restart: on-failure
+    restart: always
     build: 
-      context: ./app
-      dockerfile: Dockerfile
+      context: ./
+      dockerfile: ./app/Dockerfile
     volumes:
       - ./app:/var/app/flask_app
     ports:
