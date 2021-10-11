@@ -2,7 +2,7 @@ from website import db, ma, login_manager
 from flask_wtf import FlaskForm 
 from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Email, Length
-from flask_login import UserMixin, login_user, login_required, logout_user, current_user
+from flask_login import UserMixin
 
 
 # Models
@@ -13,7 +13,8 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(100))
     f_name = db.Column(db.String(32))
     l_name = db.Column(db.String(32))
-    age = db.Column(db.Integer)
+    age = db.Column(db.Integer) 
+    # (NOTE) Age should probably be swapped out with an email field. Thoughts? - Travis
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -25,16 +26,17 @@ class User(UserMixin, db.Model):
         self.f_name = first
         self.l_name = last
         self.age = age
-
+#Login Form Model for existing Usersused in views.log_in route)
 class LoginForm(FlaskForm):
-    username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
-    password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
+    username = StringField('username', validators=[InputRequired(), Length(min=4, max=50)])
+    password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=100)])
 
-
-# class RegisterForm(FlaskForm):
-#     email = StringField('email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
-#     username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
-#     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
+#SignUp Form Model for new Users (used in views.sign_up route)
+class SignUpForm(FlaskForm):
+    username = StringField('username', validators=[InputRequired(), Length(min=4, max=50)])
+    password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=100)])
+    f_name = StringField('first name', validators=[InputRequired(), Length(min=2, max=32)])
+    l_name = StringField('last name', validators=[InputRequired(), Length(min=2, max=32)])
 
 class Employee(db.Model):
     emp_id = db.Column(db.Integer, primary_key=True, autoincrement=True)

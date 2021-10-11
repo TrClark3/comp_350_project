@@ -1,36 +1,24 @@
-<!-- This is our sign-up page for collecting user info, app.py handles sending it to database -->
-{% extends 'base.html' %}
+<!-- This is our sign-up page for collecting user info, views.py handles sending it to database -->
+{% extends "bootstrap/base.html" %}
+{% include "base.html" %}
+<!-- The above works for now, but it renders the toolbar a little differently than other pages for some reason... -->
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %} Sign Up {% endblock %}
 
 {% block content %}
-<div class="container" id="sign_up">
-    <h4>Get Started Below</h4>
+<div class="container", id="sign_up">
 
-    {% if error_statement %}
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        {{error_statement}}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    {% endif %}
+  <form class="form-signin" method="POST">
+    <h2 class="form-signin-heading">Sign Up</h2>
+    {{ form.hidden_tag() }}
+    {{ wtf.form_field(form.f_name) }}
+    {{ wtf.form_field(form.l_name) }}
+    {{ wtf.form_field(form.username) }}
+    {{ wtf.form_field(form.password) }}
+    
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
+  </form>
 
-    <form method="POST">
-        <p>
-            <input id="first" name="firstname" type="text" placeholder="First Name" value={{f_name}}>
-        </p>
-        <p>
-            <input id="last" name="lastname" type="text" placeholder="Last Name" value="{{l_name}}">
-        </p>
-        <p>
-            <input id="username" name="username" type="text" placeholder="Username" value="{{username}}">
-        </p>
-        <p>
-            <input id="password1" name="password1" type="password" placeholder="Password">
-        </p>
-        <p>
-            <input id="password2" name="password2" type="password" placeholder="Confirm Password">
-        </p>
-        <button type="submit" class = "btn btn-secondary">Sign me up!</button>
-    </form>
-</div>
+</div> <!-- /container -->
 {% endblock %}
