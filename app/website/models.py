@@ -1,8 +1,9 @@
-from website import db, ma
+from website import db, ma, login_manager
+from flask_login import UserMixin
 
 
 # Models
-class User(db.Model):
+class User(UserMixin, db.Model):
     # Structure
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(50), unique=True)
@@ -18,6 +19,9 @@ class User(db.Model):
         self.l_name = last
         self.age = age
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 class Employee(db.Model):
     emp_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
