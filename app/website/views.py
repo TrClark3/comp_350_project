@@ -66,4 +66,11 @@ def log_in():
 @views.route('/dashboard')
 @login_required
 def user_dashboard():
-    return render_template('user-dashboard.html', name=current_user.username)
+    return render_template('user-dashboard.html', user=current_user.username, name=current_user.f_name)
+
+# User log out, redirects to homepage (index.html)
+@views.route('/logout')
+@login_required
+def log_out():
+    logout_user()
+    return redirect(url_for('views.home'))

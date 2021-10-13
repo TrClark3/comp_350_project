@@ -17,7 +17,7 @@ class User(UserMixin, db.Model):
     # (NOTE) Age should probably be swapped out with an email field. Thoughts? - Travis
 
     def get_id(self):
-       return True
+        return (self.user_id)
 
     @login_manager.user_loader
     def load_user(user_id):
