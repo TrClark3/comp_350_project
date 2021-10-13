@@ -16,6 +16,9 @@ class User(UserMixin, db.Model):
     age = db.Column(db.Integer) 
     # (NOTE) Age should probably be swapped out with an email field. Thoughts? - Travis
 
+    def get_id(self):
+       return True
+
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
@@ -30,6 +33,7 @@ class User(UserMixin, db.Model):
 class LoginForm(FlaskForm):
     username = StringField('username', validators=[InputRequired(), Length(min=4, max=50)])
     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=100)])
+    remember = BooleanField('Remember me')
 
 #SignUp Form Model for new Users (used in views.sign_up route)
 class SignUpForm(FlaskForm):

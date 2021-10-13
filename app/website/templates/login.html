@@ -1,9 +1,20 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
+{% include 'nav-bar.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %} Log In {% endblock %}
 
 {% block content %}
-<h2>
-    Welcome back! (Log in stuff not implemented yet)
-</h2>
+<div class="container">
+
+    <form class="form-signin" method="POST">
+      <h2 class="form-signin-heading">Welcome back! Log in below.</h2>
+      {{ form.hidden_tag() }}
+      {{ wtf.form_field(form.username) }}
+      {{ wtf.form_field(form.password) }}
+      {{ wtf.form_field(form.remember) }}
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+
+  </div>
 {% endblock %}
