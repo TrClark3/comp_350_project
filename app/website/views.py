@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
+from sqlalchemy.exc import IntegrityError
 
 
 from website import db
@@ -22,6 +23,9 @@ def sign_up():
     # Create form from SignUpForm class in models.py
     form = SignUpForm()
 
+    # Holds possible error message during sign up process
+    error = None
+
     if form.validate_on_submit():
 
         hashed_password = generate_password_hash(form.password.data, method='sha256')
@@ -30,12 +34,17 @@ def sign_up():
         new_user = User(username=form.username.data, password=hashed_password, 
         first=form.f_name.data, last=form.l_name.data, age = 0)
         
-        # Add user to database
-        db.session.add(new_user)
-        db.session.commit()
-        return redirect(url_for('views.thanks'))
+        # Add user to database, if username doesn't already exist
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for('views.thanks'))
+        except IntegrityError:
+            db.session.rollback()
+            error = 'Username already taken!'
+        
 
-    return render_template('sign-up.html', form=form)
+    return render_template('sign-up.html', form=form, error=error)
 
 # Sign up completed successfully. Uses thanks.html
 @views.route('/thanks')
@@ -48,6 +57,8 @@ def log_in():
 
     # Create form from LoginForm clasee in models.py
     form = LoginForm()
+    # Holds possible error message during log in process
+    error = None
 
     if form.validate_on_submit():
 
@@ -58,9 +69,9 @@ def log_in():
                 login_user(user, remember=form.remember.data)
                 return redirect(url_for('views.user_dashboard'))
             
-            return '<h2> That username or password combination is incorrect. Please try again. <h2>' # probs a cooler way to do this
+        error = "Username or password is incorrect. Please try again."
             
-    return render_template('login.html', form=form)
+    return render_template('login.html', form=form, error=error)
 
 # User's dashboard page. Uses user-dashboard.html
 @views.route('/dashboard')
