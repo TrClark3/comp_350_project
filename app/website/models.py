@@ -92,6 +92,13 @@ class HotelReservation(db.Model):
     check_in = db.Column(db.Date)
     check_out = db.Column(db.Date)
 
+    def __init__(self, res_id, room_num, cust_id, check_in, check_out):
+        self.res_id = res_id
+        self.room_num = room_num
+        self.cust_id = cust_id
+        self.check_in = check_in
+        self.check_out = check_out
+
 
 class SpaService(db.Model):
     __tablename__ = "spaservice"
@@ -99,6 +106,11 @@ class SpaService(db.Model):
     service_type = db.Column(db.Enum(ServiceType), primary_key=True)
     start_time = db.Column(db.Time)
     end_time = db.Column(db.Time)
+
+    def __init__(self, service_type, start_time, end_time):
+        self.service_type = service_type
+        self.start_time = start_time
+        self.end_time = end_time
 
 
 class SpaReservation(db.Model):
@@ -111,6 +123,15 @@ class SpaReservation(db.Model):
     start_time = db.Column(db.Time)
     end_time = db.Column(db.Time)
     service_type = db.Column(db.Enum(ServiceType), db.ForeignKey('spaservice.service_type'))
+
+    def __init__(self, res_id, room_num, cust_id, spa_start, start_time, end_time, service_type):
+        self.res_id = res_id
+        self.room_num = room_num
+        self.cust_id = cust_id
+        self.spa_start = spa_start
+        self.start_time = start_time
+        self.end_time = end_time
+        self.service_type = service_type
 
 
 # Schema
