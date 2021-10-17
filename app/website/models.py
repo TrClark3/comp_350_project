@@ -24,6 +24,8 @@ class RoomType(enum.Enum):
 
 # Models
 class User(db.Model):
+    __tablename__ = "user"
+
     # Structure
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(50), unique=True)
@@ -41,6 +43,8 @@ class User(db.Model):
 
 
 class Employee(db.Model):
+    __tablename__ = "employee"
+
     emp_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     f_name = db.Column(db.String(50))
     l_name = db.Column(db.String(50))
@@ -51,6 +55,8 @@ class Employee(db.Model):
 
 
 class Customer(db.Model):
+    __tablename__ = "customer"
+
     cust_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(50))
     password = db.Column(db.String(50))
@@ -65,6 +71,8 @@ class Customer(db.Model):
 
 
 class HotelRoom(db.Model):
+    __tablename__ = "hotelroom"
+
     room_num = db.Column(db.Integer, primary_key=True, autoincrement=True)
     room_type = db.Column(db.Enum(RoomType))
     smoking = db.Column(db.Boolean)
@@ -76,27 +84,33 @@ class HotelRoom(db.Model):
 
 
 class HotelReservation(db.Model):
+    __tablename__ = "hotelreservation"
+
     res_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     room_num = db.Column(db.Integer)
-    cust_id = db.Column(db.Integer, db.ForeignKey('Customer.cust_id'))
+    cust_id = db.Column(db.Integer, db.ForeignKey('customer.cust_id'))
     check_in = db.Column(db.Date)
     check_out = db.Column(db.Date)
 
 
 class SpaService(db.Model):
+    __tablename__ = "spaservice"
+
     service_type = db.Column(db.Enum(ServiceType), primary_key=True)
     start_time = db.Column(db.Time)
     end_time = db.Column(db.Time)
 
 
 class SpaReservation(db.Model):
+    __tablename__ = "spareservation"
+
     res_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    room_num = db.Column(db.Integer, db.ForeignKey('HotelReservation.res_id'))
-    cust_id = db.Column(db.Integer, db.ForeignKey('Customer.cust_id'))
+    room_num = db.Column(db.Integer, db.ForeignKey('hotelreservation.res_id'))
+    cust_id = db.Column(db.Integer, db.ForeignKey('customer.cust_id'))
     spa_start = db.Column(db.Date)
     start_time = db.Column(db.Time)
     end_time = db.Column(db.Time)
-    service_type = db.Column(db.Enum(ServiceType), db.ForeignKey('SpaService.service_type'))
+    service_type = db.Column(db.Enum(ServiceType), db.ForeignKey('spaservice.service_type'))
 
 
 # Schema
