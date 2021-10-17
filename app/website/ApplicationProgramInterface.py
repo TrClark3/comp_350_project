@@ -61,14 +61,20 @@ def add_user():
 def update_user():
     if request.method == "PUT":
         user_id = request.args['user_id']
+        username = request.args['username']
+        password = request.args['password']
+        f_name = request.args['f_name']
+        l_name = request.args['l_name']
+        age = request.args['age']
 
         user = User.query.get(user_id)
         if user is not None:
-            user.username = request.args['username']
-            user.password = request.args['password']
-            user.f_name = request.args['f_name']
-            user.l_name = request.args['l_name']
-            user.age = request.args['age']
+            user.username = username
+            user.password = password
+            user.f_name = f_name
+            user.l_name = l_name
+            user.age = age
+            print(user)
 
             db.session.commit()
             return f"Success! User {str(user_id)} changed!", 200
