@@ -37,6 +37,7 @@ def delete_user(user_id):
 
     return "DELETING", 200
 
+
 @userApi.route("/users/add", methods=['GET', 'POST'])
 def add_user():
     if request.method == "POST":
@@ -55,23 +56,20 @@ def add_user():
 
     return "Wrong method type", 404
 
+
 @userApi.route("/users/update", methods=['GET', 'PUT'])
 def update_user():
     if request.method == "PUT":
         user_id = request.args['user_id']
-        username = request.args['username']
-        password = request.args['password']
-        f_name = request.args['f_name']
-        l_name = request.args['l_name']
-        age = request.args['age']
 
         user = User.query.get(user_id)
         if user is not None:
-            user.username = username
-            user.password = password
-            user.f_name = f_name
-            user.l_name = l_name
-            user.age = age
+            user.username = request.args['username']
+            user.password = request.args['password']
+            user.f_name = request.args['f_name']
+            user.l_name = request.args['l_name']
+            user.age = request.args['age']
+
             db.session.commit()
             return f"Success! User {str(user_id)} changed!", 200
 
