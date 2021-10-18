@@ -1,0 +1,57 @@
+-- CUSTOMER
+insert INTO customer(cust_id, usrname, passwd, fname, lname, pmt_type, pmt_info) VALUES (0, "JSmith1", "johnyboy1", "John", "Smith", "CC", "1234567891204312");
+
+-- HOTEL ROOM
+insert INTO hotel_room(roomnum, rtype, smoke) VALUES (0, "JUNIOR", 0);
+insert INTO hotel_room(roomnum, rtype, smoke) VALUES (0, "QUEEN", 0);
+insert INTO hotel_room(roomnum, rtype, smoke) VALUES (0, "KING", 1);
+
+-- HOTEL RESERVATION
+insert INTO hotel_reservation(rid, roomnum, cust_id, checkin, checkout) VALUES (0, 1, 1, "2021-10-1", "2021-10-2");
+
+-- SPA SERVICE
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("MINERAL BATH", "N/A", 2.5, 60, 90, "8:00:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("MINERAL BATH", "N/A", 2.5, 60, 90, "9:30:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("MINERAL BATH", "N/A", 2.5, 60, 90, "11:00:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("MINERAL BATH", "N/A", 2.5, 60, 90, "12:30:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("MINERAL BATH", "N/A", 2.5, 60, 90, "14:00:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("MINERAL BATH", "N/A", 2.5, 60, 90, "15:30:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("MINERAL BATH", "N/A", 2.5, 60, 90, "17:00:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("MINERAL BATH", "N/A", 2.5, 60, 90, "18:30:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("MINERAL BATH", "N/A", 2.5, 60, 90, "20:00:00");
+
+
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("MASSAGE", "SWEDISH/SHIATSU/DEEP TTSSUE", 2, 30, 60, "8:00:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("MASSAGE", "SWEDISH/SHIATSU/DEEP TTSSUE", 2, 30, 60, "9:30:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("MASSAGE", "SWEDISH/SHIATSU/DEEP TTSSUE", 2, 30, 60, "11:00:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("MASSAGE", "SWEDISH/SHIATSU/DEEP TTSSUE", 2, 30, 60, "12:30:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("MASSAGE", "SWEDISH/SHIATSU/DEEP TTSSUE", 2, 30, 60, "14:00:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("MASSAGE", "SWEDISH/SHIATSU/DEEP TTSSUE", 2, 30, 60, "15:30:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("MASSAGE", "SWEDISH/SHIATSU/DEEP TTSSUE", 2, 30, 60, "17:00:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("MASSAGE", "SWEDISH/SHIATSU/DEEP TTSSUE", 2, 30, 60, "18:30:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("MASSAGE", "SWEDISH/SHIATSU/DEEP TTSSUE", 2, 30, 60, "20:00:00");
+
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("FACIAL SERVICES", "NORMAL/COLLAGEN", 2, 30, 60, "8:00:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("FACIAL SERVICES", "NORMAL/COLLAGEN", 2, 30, 60, "9:30:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("FACIAL SERVICES", "NORMAL/COLLAGEN", 2, 30, 60, "11:00:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("FACIAL SERVICES", "NORMAL/COLLAGEN", 2, 30, 60, "12:30:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("FACIAL SERVICES", "NORMAL/COLLAGEN", 2, 30, 60, "14:00:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("FACIAL SERVICES", "NORMAL/COLLAGEN", 2, 30, 60, "15:30:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("FACIAL SERVICES", "NORMAL/COLLAGEN", 2, 30, 60, "17:00:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("FACIAL SERVICES", "NORMAL/COLLAGEN", 2, 30, 60, "18:30:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("FACIAL SERVICES", "NORMAL/COLLAGEN", 2, 30, 60, "20:00:00");
+
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("SPECIALTY TREATMENTS", "HOT STonE/SUGAR SCRUB/HERBAL BODY WRAP/BOTANICAL MUD WRAP", 3.5, 60, 90, "8:00:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("SPECIALTY TREATMENTS", "HOT STonE/SUGAR SCRUB/HERBAL BODY WRAP/BOTANICAL MUD WRAP", 3.5, 60, 90, "9:30:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("SPECIALTY TREATMENTS", "HOT STonE/SUGAR SCRUB/HERBAL BODY WRAP/BOTANICAL MUD WRAP", 3.5, 60, 90, "11:00:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("SPECIALTY TREATMENTS", "HOT STonE/SUGAR SCRUB/HERBAL BODY WRAP/BOTANICAL MUD WRAP", 3.5, 60, 90, "12:30:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("SPECIALTY TREATMENTS", "HOT STonE/SUGAR SCRUB/HERBAL BODY WRAP/BOTANICAL MUD WRAP", 3.5, 60, 90, "14:00:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("SPECIALTY TREATMENTS", "HOT STonE/SUGAR SCRUB/HERBAL BODY WRAP/BOTANICAL MUD WRAP", 3.5, 60, 90, "15:30:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("SPECIALTY TREATMENTS", "HOT STonE/SUGAR SCRUB/HERBAL BODY WRAP/BOTANICAL MUD WRAP", 3.5, 60, 90, "17:00:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("SPECIALTY TREATMENTS", "HOT STonE/SUGAR SCRUB/HERBAL BODY WRAP/BOTANICAL MUD WRAP", 3.5, 60, 90, "18:30:00");
+insert INTO spa_service(stype, s_subtype, cost_per_min, min_time, max_time, start_time) values ("SPECIALTY TREATMENTS", "HOT STonE/SUGAR SCRUB/HERBAL BODY WRAP/BOTANICAL MUD WRAP", 3.5, 60, 90, "20:00:00");
+
+-- SPA RESERVATION
+insert INTO spa_reservation VALUES (0, 1, '2021-10-1', 4);
+
+--

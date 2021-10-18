@@ -1,0 +1,56 @@
+
+CREATE table employee(
+empid int auto_increment,
+fname varchar(50),
+lname varchar(50),
+PRIMARY KEY(empid)
+);
+-- -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE table customer(
+cust_id int auto_increment,
+usrname VARCHAR(50),
+passwd VARCHAR(20),
+fname varchar(50),
+lname varchar(50),
+pmt_type ENUM("CC", "CASH", "CHECK"),
+pmt_info varchar(50),
+PRIMARY KEY(cust_id)
+);
+-- -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE table hotel_room(
+roomnum int AUTO_INCREMENT,
+rtype ENUM("KING", "QUEEN", "JUNIOR"),
+smoke boolean,
+PRIMARY KEY(roomnum)
+);
+-- -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE table hotel_reservation(
+rid int auto_increment,
+roomnum int,
+cust_id int,
+checkin date,
+checkout date,
+PRIMARY KEY(rid),
+FOREIGN KEY(cust_id) REFERENCES customer(cust_id)
+);
+-- -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE table spa_service(
+sid int auto_increment,
+stype VARCHAR(20),
+s_subtype varchar(70),
+cost_per_min double,
+start_time time,
+min_time int,
+max_time int,
+PRIMARY KEY(sid)
+);
+-- -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE table spa_reservation(
+rid int auto_increment,
+cust_id int,
+spa_date date,	
+sid int,		
+PRIMARY KEY(rid),
+FOREIGN KEY(cust_id) REFERENCES customer(cust_id),
+FOREIGN KEY(sid) REFERENCES spa_service(sid)
+);

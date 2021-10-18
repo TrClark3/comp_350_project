@@ -1,0 +1,86 @@
+CREATE VIEW h_res_private as 
+SELECT rid, h.roomnum, c.usrname, c.fname, c.lname, checkin, checkout, h.rtype, h.smoke, c.pmt_type, c.pmt_info FROM hotel_reservation r
+JOIN hotel_room h on h.roomnum = r.roomnum
+JOIN customer c on c.cust_id = r.cust_id;
+
+DROP VIEW h_res_private;
+SELECT * FROM h_res_private;
+-- -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+delimiter //
+CREATE PROCEDURE show_spa_slots(IN start_date DATE)
+BEGIN
+		DECLARE sid int;
+        SELECT s.sid INTO sid FROM spa_reservation s WHERE s.spa_date = start_date;
+		SELECT * FROM spa_service s WHERE s.sid != sid ORDER BY s.start_time ASC;
+END//
+delimiter ;
+-- -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+delimiter //
+CREATE PROCEDURE show_vacant_rooms(IN start_date DATE, IN end_date DATE)
+vacant: BEGIN
+	DECLARE rnum int;
+    DECLARE days int;
+    SELECT DATEDIFF(end_date, start_date) into days;
+	IF days <= 0 THEN
+		LEAVE vacant;
+		END IF;
+	SELECT * FROM hotel_room WHERE roomnum NOT IN 
+    (SELECT roomnum FROM hotel_reservation h WHERE (start_date >= h.checkin AND start_date <= h.checkout) OR (end_date >= h.checkin AND end_date <= h.checkout)); 
+END//
+delimiter;		
+-- -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+delimiter //
+CREATE function usrlogin(usrname VARCHAR(50), passwd VARCHAR(20))
+RETURNS BOOL
+NOT DETERMINISTIC
+READS SQL DATA
+login: BEGIN
+-- determine if the given login info corresponds, if not throw err
+	IF usrname = "" OR passwd = "" THEN
+		LEAVE login;
+	ELSE
+        RETURN EXISTS (SELECT c.usrname, c.passwd FROM customer c WHERE c.usrname = usrname AND c.passwd = passwd);
+	end if;
+END//
+delimiter ;
+-- -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+delimiter //		
+CREATE PROCEDURE isreserved(IN roomnum int, IN checkin DATE, in checkout DATE)	-- sanity check before creating hotel/spa reservation
+ir: BEGIN
+	DECLARE DAYS INT;
+		SELECT DATEDIFF(checkout, checkin) INTO DAYS;
+        IF DAYS < 0 THEN
+            LEAVE ir;
+		ELSE
+			SELECT EXISTS(SELECT * FROM hotel_reservation r WHERE (r.roomnum = roomnum AND (r.checkout > checkin))); 
+		end if;
+END//
+delimiter ;
+-- -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+delimiter //
+CREATE PROCEDURE make_hotel_reservation(IN usrname VARCHAR(50), IN roomnum INT, IN checkin DATE, IN checkout DATE)
+	BEGIN
+    DECLARE cust_id INT;
+    DECLARE reserved INT;
+    SELECT c.cust_id INTO cust_id FROM customer c WHERE c.usrname = usrname;
+		 INSERT INTO hotel_reservation (rid, roomnum, cust_id, checkin, checkout) VALUES (0, roomnum, cust_id, checkin, checkout);
+	
+END//
+delimiter ;
+-------------------------------------------------------------------------------------------------------------------------
+delimiter //
+CREATE PROCEDURE cancel_hotel_reservation(IN usrname VARCHAR(50), IN checkin DATE) -- remove current reservation if necessary
+BEGIN
+	DECLARE cust_id int;
+    SELECT c.cust_id INTO cust_id FROM customer c WHERE c.usrname = usrname;
+	DELETE FROM hotel_reservation r WHERE r.cust_id = cust_id AND r.checkin = checkin;
+END//
+delimiter ;
+------------------------------------------------------------------------------------------------------------------------
+delimiter //
+CREATE PROCEDURE cancel_spa_reservation(IN cust_id int, spa_start date, spa_end date) -- remove current reservation if necessary
+BEGIN
+	DELETE FROM spa_reservation s WHERE s.cust_id = cust_id AND s.spa_start = spa_start AND s.spa_end = spa_end;
+END//
+delimiter ;
+
