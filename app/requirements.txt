@@ -10,4 +10,3 @@ flask_wtf
 wtforms
 wtforms.validators
 flask_login
-sqlalchemy.exc
