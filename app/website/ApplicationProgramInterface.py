@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
+import logging
 
 from website import db
 from website.models import User, user_schema, users_schema
@@ -57,24 +58,18 @@ def add_user():
     return "Wrong method type", 404
 
 
-@userApi.route("/users/update", methods=['GET', 'PUT'])
-def update_user():
+@userApi.route("/users/update/<int:user_id>", methods=['GET', 'PUT'])
+def update_user(user_id):
     if request.method == "PUT":
-        user_id = request.args['user_id']
-        username = request.args['username']
-        password = request.args['password']
-        f_name = request.args['f_name']
-        l_name = request.args['l_name']
-        age = request.args['age']
-
         user = User.query.get(user_id)
+
         if user is not None:
-            user.username = username
-            user.password = password
-            user.f_name = f_name
-            user.l_name = l_name
-            user.age = age
-            print(user)
+            user.username = request.args['username']
+            user.password = request.args['password']
+            user.f_name = request.args['f_name']
+            user.l_name = request.args['l_name']
+            user.age = request.args['age']
+            logging.getLogger('website').debug(user)
 
             db.session.commit()
             return f"Success! User {str(user_id)} changed!", 200
