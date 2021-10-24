@@ -1,7 +1,6 @@
-<!-- Simple page to thank user for signing up. -->
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block title %} Thanks! {% endblock %}
+{% block title %} Dashboard {% endblock %}
 
 {% block content %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -12,11 +11,17 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {{user}}
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#">Something</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{{url_for('views.log_out')}}">Log Out</a></li>
+              </ul>
           <li class="nav-item">
-            <a class="nav-link" href="{{url_for('views.log_in')}}">Log In</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{url_for('views.sign_up')}}">Sign Up</a>
+            <a class="nav-link" href="#">Upcoming Reservations</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -35,5 +40,6 @@
   </nav>
   <br> <!--Line break to space nav bar and page content, Delete if necessary-->
 
-    <h1>Welcome! You're all set.</h1>
-{% endblock %}
+  <iframe src="https://giphy.com/embed/ASd0Ukj0y3qMM" width="480" height="360" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+  <h3>Hiya, {{name}}</h3>
+  {% endblock %}

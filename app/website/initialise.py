@@ -16,4 +16,5 @@ class Initialise:
             app.config["DB_DATABASE"]
         )
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+        app.config['SECRET_KEY'] = 'password'
         return app

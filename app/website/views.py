@@ -1,64 +1,87 @@
-from flask import Blueprint, render_template, request, redirect, url_for
-from werkzeug.security import generate_password_hash
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import login_user, login_required, logout_user, current_user
+from sqlalchemy.exc import IntegrityError
+
 
 from website import db
-from website.models import User
+from website.models import User, LoginForm, SignUpForm
 import json
 
 views = Blueprint('views', __name__)
 
-
+# Homepage. Uses index.html
+@views.route('/home')
 @views.route('/')
-def index():
+def home():
     return render_template('index.html')
 
-
-# Handle a User Sign-Up
+# SignUp Page. Uses sign-up.html
 @views.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
-    # Handles POST method logic
-    if request.method == 'POST':
-        # collect form data, NOTE: age is odd to query in this context, should we consider deleting?
-        f_name = request.form.get('firstname')
-        l_name = request.form.get('lastname')
-        username = request.form.get('username')
-        password1 = request.form.get('password1')
-        password2 = request.form.get('password2')
 
-        # validate form data to fit in database. Commented out bc I need to import bootstrap but im too lazy rn
-        # We should also validate the username is unique somehow
-        """
-            Technically since usernames are always unique in our database 
-            we would need to handle the case if the entered username is already 
-            in the database
-                        - Alessasndro
-        """
+    # Create form from SignUpForm class in models.py
+    form = SignUpForm()
 
-        # if (len(f_name) < 2 or len(f_name) > 32):
-        #     flash('First Name must be between 2 and 32 characters.', category='error')
-        # elif (len(l_name) < 2 or len(l_name) > 32):
-        #     flash('Last Name must be between 2 and 32 characters.', category='error')
-        # elif (len(username) < 4 or len(username) > 50):
-        #     flash('Username must be between 4 and 50 characters.', category='error')
-        # elif password1 != password2:
-        #     flash('Passwords do not match!', category='error')
-        # elif len(password1) < 5:
-        #     flash('Password must be between 5 and 32 characters.', category='error')
-        # else:
-        #     # add user to database
-        #     flash('Account Created!', category='success')
+    # Holds possible error message during sign up process
+    error = None
 
-        # add user to database, encrypt password using werkzeug import
-        new_user = User(username=username, password=generate_password_hash(password1, method='sha256'),
-                        first=f_name, last=l_name, age=0)
-        db.session.add(new_user)
-        db.session.commit()
-        return redirect(url_for('views.thanks'))
+    if form.validate_on_submit():
 
-    # Render the sign-up page
-    return render_template('sign-up.html')
+        hashed_password = generate_password_hash(form.password.data, method='sha256')
 
+        # Create new user from form data
+        new_user = User(username=form.username.data, password=hashed_password, 
+        first=form.f_name.data, last=form.l_name.data, age = 0)
+        
+        # Add user to database, if username doesn't already exist
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for('views.thanks'))
+        except IntegrityError:
+            db.session.rollback()
+            error = 'Username already taken!'
+        
 
+    return render_template('sign-up.html', form=form, error=error)
+
+# Sign up completed successfully. Uses thanks.html
 @views.route('/thanks')
 def thanks():
     return render_template('thanks.html')
+
+# Login Page. Uses login.html
+@views.route('/log-in', methods=['GET', 'POST'])
+def log_in():
+
+    # Create form from LoginForm clasee in models.py
+    form = LoginForm()
+    # Holds possible error message during log in process
+    error = None
+
+    if form.validate_on_submit():
+
+        # Find user via username in database and confirm hashed password
+        user = User.query.filter_by(username=form.username.data).first()
+        if user:
+            if check_password_hash(user.password, form.password.data):
+                login_user(user, remember=form.remember.data)
+                return redirect(url_for('views.user_dashboard'))
+            
+        error = "Username or password is incorrect. Please try again."
+            
+    return render_template('login.html', form=form, error=error)
+
+# User's dashboard page. Uses user-dashboard.html
+@views.route('/dashboard')
+@login_required
+def user_dashboard():
+    return render_template('user-dashboard.html', user=current_user.username, name=current_user.f_name)
+
+# User log out, redirects to homepage (index.html)
+@views.route('/logout')
+@login_required
+def log_out():
+    logout_user()
+    return redirect(url_for('views.home'))
