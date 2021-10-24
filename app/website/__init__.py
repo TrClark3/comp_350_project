@@ -1,9 +1,13 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from flask_bootstrap import Bootstrap
+from flask_login import LoginManager
 
 db = SQLAlchemy()
 ma = Marshmallow()
+login_manager = LoginManager()
+bootstrap = Bootstrap()
 
 
 def create_app():
@@ -16,6 +20,8 @@ def create_app():
 
     ma.init_app(app)
     db.init_app(app)
+    login_manager.init_app(app)
+    bootstrap.init_app(app)
 
     from .views import views
     from website.ApplicationProgramInterface import userApi

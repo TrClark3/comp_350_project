@@ -1,7 +1,7 @@
-<!-- Simple page to thank user for signing up. -->
 {% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %} Thanks! {% endblock %}
+{% block title %} Log In {% endblock %}
 
 {% block content %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -35,5 +35,21 @@
   </nav>
   <br> <!--Line break to space nav bar and page content, Delete if necessary-->
 
-    <h1>Welcome! You're all set.</h1>
+<div class="container">
+    <!-- Display error if one exists -->
+    {% if error %}
+      <p class=error><strong>Error:</strong> {{ error }}
+    {% endif %}
+
+    <form class="form-signin" method="POST">
+      <h2 class="form-signin-heading">Welcome back! Log in below.</h2>
+      {{ form.hidden_tag() }}
+      {{ wtf.form_field(form.username) }}
+      {{ wtf.form_field(form.password) }}
+      {{ wtf.form_field(form.remember) }}
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+    
+</div>
+
 {% endblock %}
