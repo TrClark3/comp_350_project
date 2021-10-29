@@ -30,23 +30,12 @@
 		<p class="error"><strong>Error: </strong> {{ error }} </p>
 	{% endif %}
 
-	<form class="form-customer-info" method="POST">
+	<form class="form-dates" method="POST">
         {{ form.hidden_tag() }}
-        <h2>Room Info</h2>
-        {{ wtf.form_field(form.room_type) }}
-        {{ wtf.form_field(form.smoking) }}
-        <br><br>
-        <h2>Customer Info</h2>
-        {{ wtf.form_field(form.username) }}
-        {{ wtf.form_field(form.password) }}
-        {{ wtf.form_field(form.payment_type) }}
-        {{ wtf.form_field(form.payment_info) }}
-        <br><br>
-        <h2>Stay Info</h2>
         {{ wtf.form_field(form.start_date) }}
         {{ wtf.form_field(form.end_date) }}
         <br>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Make Reservation</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Check Dates</button>
     </form>
 	
 </div>

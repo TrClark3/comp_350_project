@@ -67,10 +67,34 @@ def make_reservation():
     error = None
 
     if form.validate_on_submit():
-        user = Customer(username=form.username.data, password=generate_password_hash(form.password.data),
-                        ptype=form.payment_type.data, pinfo=form.payment_info.data)
+        username = form.username.data
+        password = generate_password_hash(form.password.data)
+        ptype = form.payment_type.data
+        pinfo = form.payment_info.data
+
+        cust = Customer.query.filter_by(username=username, password=password).first()
+        if not cust:
+            db.session.add(Customer(username, password, ptype, pinfo))
+            db.session.commit()
+
+        room = HotelRoom.query.filter_by(room_type=form.room_type.data, smoking=form.smoking.data).first()
+        if room:
+            reservation = HotelReservation.query.filter_by(check_in=form.start_date.data,
+                                                           check_out=form.end_date.data).first()
+            if not reservation:
+                reservation = HotelReservation(room_num=room.room_num, cust_id=cust.cust_id,
+                                               check_in=form.start_date.data, check_out=form.end_date.data)
+                db.session.add(reservation)
+                db.session.commit()
+            else:
+                # TODO: more info on the error messages
+                error = "A reservation is already made"
+
+        else:
+            error = "Room selected Is not available. Choose another."
 
     return render_template('create-reservation.html', form=form, error=error)
+
 
 # Sign up completed successfully. Uses thanks.html
 @views.route('/thanks')

@@ -103,8 +103,7 @@ class HotelReservation(db.Model):
     check_in = db.Column(db.Date)
     check_out = db.Column(db.Date)
 
-    def __init__(self, res_id, room_num, cust_id, check_in, check_out):
-        self.res_id = res_id
+    def __init__(self, room_num, cust_id, check_in, check_out):
         self.room_num = room_num
         self.cust_id = cust_id
         self.check_in = check_in
@@ -135,8 +134,7 @@ class SpaReservation(db.Model):
     end_time = db.Column(db.Time)
     service_type = db.Column(db.Enum(ServiceType), db.ForeignKey('spaservice.service_type'))
 
-    def __init__(self, res_id, room_num, cust_id, spa_start, start_time, end_time, service_type):
-        self.res_id = res_id
+    def __init__(self, room_num, cust_id, spa_start, start_time, end_time, service_type):
         self.room_num = room_num
         self.cust_id = cust_id
         self.spa_start = spa_start
@@ -213,6 +211,8 @@ class SignUpForm(FlaskForm):
 class ReservationForm(FlaskForm):
     room_type = SelectField('Room Type', choices=[('KING', 'King'), ('QUEEN', 'Queen'), ('JUNIOR', 'Junior')])
     smoking = BooleanField('Smoking')
+    start_date = DateField('start date', validators=[InputRequired()])
+    end_date = DateField('end date', validators=[InputRequired()])
     username = StringField('Username', validators=[InputRequired(), Length(min=4,max=50)])
     password = StringField('Password', validators=[InputRequired(), Length(min=4,max=50)])
     payment_type = SelectField('Payment Type', choices=[('CC', 'Credit Card'), ('CASH', 'Cash'), ('CHECK', 'Check')])

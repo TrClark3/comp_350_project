@@ -3,9 +3,10 @@ from werkzeug.security import generate_password_hash
 import logging
 
 from website import db
-from website.models import User, user_schema, users_schema
+from website.models import User, user_schema, users_schema, HotelReservation, rooms_schema, Customer, customer_schema
 
 userApi = Blueprint('userApi', __name__)
+roomApi = Blueprint('roomApi', __name__)
 
 
 @userApi.route("/users", methods=['GET'])
@@ -77,3 +78,23 @@ def update_user(user_id):
         return f"Failure! User {str(user_id)} not found!", 404
 
     return "Wrong method type", 404
+
+
+def get_reservations():
+    reservations = HotelReservation.query.all()
+    dump = rooms_schema.dump(reservations)
+    return jsonify(dump), 200
+
+
+def get_reservation(in_date, out_date):
+    return None
+
+
+def delete_reservation():
+    return None
+
+
+@roomApi.route('/rooms/add', methods=['POST'])
+def make_reservation():
+
+    return None
