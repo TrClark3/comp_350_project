@@ -1,3 +1,4 @@
+from re import A
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
@@ -5,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 
 
 from website import db
-from website.models import User, LoginForm, SignUpForm
+from website.models import *
 import json
 
 views = Blueprint('views', __name__)
@@ -32,7 +33,7 @@ def sign_up():
 
         # Create new user from form data
         new_user = User(username=form.username.data, password=hashed_password, 
-        first=form.f_name.data, last=form.l_name.data, age = 0)
+        first=form.f_name.data, last=form.l_name.data, age = 0, is_admin=False)
         
         # Add user to database, if username doesn't already exist
         try:
@@ -85,3 +86,50 @@ def user_dashboard():
 def log_out():
     logout_user()
     return redirect(url_for('views.home'))
+
+@views.route('/admin-login', methods=['GET', 'POST'])
+def admin_login():
+    # Create form from LoginForm clasee in models.py
+    form = LoginForm()
+    # Holds possible error message during log in process
+    error = None
+
+    if form.validate_on_submit():
+
+        if form.username.data == "admin" and form.password.data == "password":
+            login_user(User.query.filter_by(username=form.username.data).first())
+            return redirect(url_for('admin.index'))
+        else:    
+            error = "Not so fast.. are you admin? Wrong credentials, try again."
+            
+    return render_template('admin-login.html', form=form, msg=error)
+
+
+
+# Initializes Admin (verifies the creation of an admin given the hard coded values for username and password)
+@views.route('/admin-initialization', methods=['GET', 'POST'])
+def admin_init():
+    form = AdminSignUpForm()
+
+    # Holds possible error message during authorization process
+    error = None
+
+    if form.validate_on_submit():
+        if form.username.data == "admin" and form.password.data == "password":
+            admin_user = User(username='admin', password="password", first="root", last="root", age=100, 
+            is_admin=True)
+            # Add admin user to database, if it doesn't already exist
+            try:
+                db.session.add(admin_user)
+                db.session.commit()
+                flash('Admin account created. Please log in.', 'success')
+                return redirect(url_for('views.admin_login'))
+            except IntegrityError:
+                db.session.rollback()
+                flash('Admin account already created. Please log in below.', 'warning')
+                return redirect(url_for('views.admin_login'))
+        else:
+            error = "Wrong admin credentials."
+            
+    return render_template('admin-init.html', form=form, error=error)
+    
