@@ -1,10 +1,9 @@
 from website import db, ma, login_manager
 from flask_wtf import FlaskForm 
-from wtforms import StringField, PasswordField, BooleanField
+from wtforms import StringField, PasswordField, BooleanField, DateField, SelectField
 from wtforms.validators import InputRequired, Email, Length
 from flask_login import UserMixin
 import enum
-
 
 
 # Enumerations
@@ -40,7 +39,7 @@ class User(UserMixin, db.Model):
     # (NOTE) Age should probably be swapped out with an email field. Thoughts? - Travis
 
     def get_id(self):
-        return (self.user_id)
+        return self.user_id
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -52,18 +51,7 @@ class User(UserMixin, db.Model):
         self.f_name = first
         self.l_name = last
         self.age = age
-#Login Form Model for existing Usersused in views.log_in route)
-class LoginForm(FlaskForm):
-    username = StringField('username', validators=[InputRequired(), Length(min=4, max=50)])
-    password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=100)])
-    remember = BooleanField('Remember me')
 
-#SignUp Form Model for new Users (used in views.sign_up route)
-class SignUpForm(FlaskForm):
-    username = StringField('username', validators=[InputRequired(), Length(min=4, max=50)])
-    password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=100)])
-    f_name = StringField('first name', validators=[InputRequired(), Length(min=2, max=32)])
-    l_name = StringField('last name', validators=[InputRequired(), Length(min=2, max=32)])
 
 class Employee(db.Model):
     __tablename__ = "employee"
@@ -82,7 +70,7 @@ class Customer(db.Model):
 
     cust_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(50))
-    password = db.Column(db.String(50))
+    password = db.Column(db.String(100))
     payment_type = db.Column(db.Enum(PaymentType))
     payment_info = db.Column(db.String(50))
 
@@ -202,3 +190,35 @@ class SpaReservationSchema(ma.SQLAlchemyAutoSchema):
 
 user_schema = UsersSchema()
 users_schema = UsersSchema(many=True)
+customer_schema = CustomerSchema()
+rooms_schema = HotelReservationSchema(many=True)
+services_schema = SpaServiceSchema(many=True)
+
+
+# Login Form Model for existing Usersused in views.log_in route)
+class LoginForm(FlaskForm):
+    username = StringField('username', validators=[InputRequired(), Length(min=4, max=50)])
+    password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=100)])
+    remember = BooleanField('Remember me')
+
+
+# SignUp Form Model for new Users (used in views.sign_up route)
+class SignUpForm(FlaskForm):
+    username = StringField('username', validators=[InputRequired(), Length(min=4, max=50)])
+    password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=100)])
+    f_name = StringField('first name', validators=[InputRequired(), Length(min=2, max=32)])
+    l_name = StringField('last name', validators=[InputRequired(), Length(min=2, max=32)])
+
+
+class ReservationForm(FlaskForm):
+    room_type = SelectField('Room Type', choices=[('KING', 'King'), ('QUEEN', 'Queen'), ('JUNIOR', 'Junior')])
+    smoking = BooleanField('Smoking')
+    username = StringField('Username', validators=[InputRequired(), Length(min=4,max=50)])
+    password = StringField('Password', validators=[InputRequired(), Length(min=4,max=50)])
+    payment_type = SelectField('Payment Type', choices=[('CC', 'Credit Card'), ('CASH', 'Cash'), ('CHECK', 'Check')])
+    payment_info = StringField('Payment Info', validators=[InputRequired(), Length(min=4,max=50)])
+
+
+class ReservationSearchForm(FlaskForm):
+    start_date = DateField('start date', validators=[InputRequired()])
+    end_date = DateField('end date', validators=[InputRequired()])

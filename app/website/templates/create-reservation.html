@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %} Create Reservation {% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{url_for('views.home')}}">Mud in Your Eye</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Create Reservation</a>
+          </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#"> Delete Reservation</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+</nav>
+<br> <!--Line break to space nav bar and page content, Delete if necessary-->
+
+<div class="container">
+
+	{% if error %}
+		<p class="error"><strong>Error: </strong> {{ error }} </p>
+	{% endif %}
+
+	<form class="form-customer-info" method="POST">
+        {{ form.hidden_tag() }}
+        <h2>Room Info</h2>
+        {{ wtf.form_field(form.room_type) }}
+        {{ wtf.form_field(form.smoking) }}
+        <br><br>
+        <h2>Customer Info</h2>
+        {{ wtf.form_field(form.username) }}
+        {{ wtf.form_field(form.password) }}
+        {{ wtf.form_field(form.payment_type) }}
+        {{ wtf.form_field(form.payment_info) }}
+        <br>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Make Reservation</button>
+    </form>
+	
+</div>
+
+{% endblock %}
