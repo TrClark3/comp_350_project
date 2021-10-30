@@ -61,5 +61,11 @@
     <button class="btn btn-lg btn-primary btn-block" type="submit">Create Admin</button>
   </form>
 
+    <!-- Display error gif for error if one exists -->
+    {% if error %}
+    <iframe src="https://giphy.com/embed/fnuSiwXMTV3zmYDf6k" width="480" height="360" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+    <br>
+    {% endif %}
+
 </div> <!-- /container -->
 {% endblock %}

@@ -56,7 +56,7 @@ def thanks():
 @views.route('/log-in', methods=['GET', 'POST'])
 def log_in():
 
-    # Create form from LoginForm clasee in models.py
+    # Create form from LoginForm class in models.py
     form = LoginForm()
     # Holds possible error message during log in process
     error = None
@@ -87,30 +87,11 @@ def log_out():
     logout_user()
     return redirect(url_for('views.home'))
 
-@views.route('/admin-login', methods=['GET', 'POST'])
-def admin_login():
-    # Create form from LoginForm clasee in models.py
-    form = LoginForm()
-    # Holds possible error message during log in process
-    error = None
-
-    if form.validate_on_submit():
-
-        if form.username.data == "admin" and form.password.data == "password":
-            login_user(User.query.filter_by(username=form.username.data).first())
-            return redirect(url_for('admin.index'))
-        else:    
-            error = "Not so fast.. are you admin? Wrong credentials, try again."
-            
-    return render_template('admin-login.html', form=form, msg=error)
-
-
-
-# Initializes Admin (verifies the creation of an admin given the hard coded values for username and password)
+# Admin Initialization (Step 1/2)
 @views.route('/admin-initialization', methods=['GET', 'POST'])
 def admin_init():
+    # Uses AdminSignUpForm in Models.py
     form = AdminSignUpForm()
-
     # Holds possible error message during authorization process
     error = None
 
@@ -122,7 +103,7 @@ def admin_init():
             try:
                 db.session.add(admin_user)
                 db.session.commit()
-                flash('Admin account created. Please log in.', 'success')
+                flash('Admin account created. Please log in below.', 'success')
                 return redirect(url_for('views.admin_login'))
             except IntegrityError:
                 db.session.rollback()
@@ -132,4 +113,29 @@ def admin_init():
             error = "Wrong admin credentials."
             
     return render_template('admin-init.html', form=form, error=error)
+
+# Admin login (Step 2/2)
+@views.route('/admin-login', methods=['GET', 'POST'])
+def admin_login():
+    # Create form from LoginForm class in models.py
+    form = LoginForm()
+    # Holds possible error message during log in process
+    error = None
+
+    if form.validate_on_submit():
+
+        # Checks if correct credentials provided & if admin account created yet.
+        if form.username.data == "admin" and form.password.data == "password":
+            admin = User.query.filter_by(username=form.username.data).first()
+
+            if admin:
+                login_user(admin)
+                return redirect(url_for('admin.index'))
+            flash("Admin account not yet created. Please perform Admin Initialization step first.", "warning")    
+            return redirect(url_for('views.admin_login'))
+
+        else:
+            error = "Wrong admin credentials."
+            
+    return render_template('admin-login.html', form=form, error=error)
     
