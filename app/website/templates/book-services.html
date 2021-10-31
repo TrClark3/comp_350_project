@@ -1,7 +1,6 @@
-{% extends 'base.html' %}
-{% import "bootstrap/wtf.html" as wtf %}
+{% extends "base.html" %}
 
-{% block title %} Create Reservation {% endblock %}
+{% block title %} Book Services {% endblock %}
 
 {% block content %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -47,22 +46,22 @@
       </div>
     </div>
   </nav>
-<br> <!--Line break to space nav bar and page content, Delete if necessary-->
+  <br> <!--Line break to space nav bar and page content, Delete if necessary-->
+<div  style="margin-left:1em">
+  <h3>Services to Book</h3><hr><br>
 
-<div class="container">
+  <h5>Bath Services </h5>
+  60 or 90 minute mineral bath - $2.50/minute<br><br>
 
-	{% if error %}
-		<p class="error"><strong>Error: </strong> {{ error }} </p>
-	{% endif %}
+  <h5>Massage Services </h5>
+  60 or 90 minute Swedish massage - $2.00/minute<br>
+  60 or 90 minute shiatsu massage - $2.00/minute<br>
+  60 or 90 minute deep tissue massage - $2.00/minute<br><br>
 
-	<form class="form-dates" method="POST">
-        {{ form.hidden_tag() }}
-        {{ wtf.form_field(form.start_date) }}
-        {{ wtf.form_field(form.end_date) }}
-        <br>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Check Dates</button>
-    </form>
-	
+  <h5>Specialty Treatment Services </h5>
+  60 or 90 minute hot stone treatment - $3.50/minute<br>
+  60 or 90 minute sugar scrub treatment - $3.50/minute<br>
+  60 or 90 minute herbal body wrap treatment - $3.50/minute<br>
+  60 or 90 minute botanical mud wrap treatment - $3.50/minute
 </div>
-
-{% endblock %}
+  {% endblock %}

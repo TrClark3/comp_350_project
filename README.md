@@ -107,9 +107,14 @@ app/
 │  │  │  ├─ main.css
 │  ├─ templates/
 │  │  ├─ base.html
+│  │  ├─ book-services.html
 │  │  ├─ index.html
+│  │  ├─ information.html
+│  │  ├─ login.html
+│  │  ├─ services.html
 │  │  ├─ sign-up.html
 │  │  ├─ thanks.html
+│  │  ├─ user-dashboard.html
 │  ├─ __init__.py
 │  ├─ ApplicationProgramInterface.py
 │  ├─ config.py

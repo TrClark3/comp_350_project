@@ -1,7 +1,6 @@
-{% extends 'base.html' %}
-{% import "bootstrap/wtf.html" as wtf %}
+{% extends "base.html" %}
 
-{% block title %} Create Reservation {% endblock %}
+{% block title %} Information {% endblock %}
 
 {% block content %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -47,22 +46,24 @@
       </div>
     </div>
   </nav>
-<br> <!--Line break to space nav bar and page content, Delete if necessary-->
-
-<div class="container">
-
-	{% if error %}
-		<p class="error"><strong>Error: </strong> {{ error }} </p>
-	{% endif %}
-
-	<form class="form-dates" method="POST">
-        {{ form.hidden_tag() }}
-        {{ wtf.form_field(form.start_date) }}
-        {{ wtf.form_field(form.end_date) }}
-        <br>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Check Dates</button>
-    </form>
-	
+  <br> <!--Line break to space nav bar and page content, Delete if necessary-->
+<div  style="margin-left:1em">
+  <h3>Information</h3><hr><br>
+    <h5>Q: Can I schedule services for my next visit?</h5>
+    Services may only be scheduled during your current stay - no reserevations
+    for future stays are allowed. <br><br>
+    <h5>Q: When will I be charged for my services?</h5>
+    You will be charged for each service you reserve at
+    the time of reservations. Payment of charges occurs at checkout.<br><br>
+    <h5>Q: Can I do a walk-in appointment?</h5>
+    Reservations are necessary for all services.<br><br>
+    <h5>Q: Can I book multiple appointments for the same time and cancel one later?</h5>
+    You cannot reserve overlapping services, although consecutive services are allowed.<br><br>
+    <h5>Q: What times can I schedule appointments for?</h5>
+    All appointments will begin no earlier than 8 am and end no later than 8 pm.<br><br>
+    <h5>Q: What if I want to cancel a reservation?</h5>
+    You may cancel a reservation for a service at no charge if you do so within
+    10 minutes of making the reservation or at least 90 minutes before the reservation time.
+    Otherwise, you will be charged for the service.<br><br>
 </div>
-
-{% endblock %}
+  {% endblock %}
