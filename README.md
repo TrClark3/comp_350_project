@@ -108,8 +108,11 @@ app/
 │  ├─ templates/
 │  │  ├─ base.html
 │  │  ├─ index.html
+│  │  ├─ login.html
+│  │  ├─ services.html
 │  │  ├─ sign-up.html
 │  │  ├─ thanks.html
+│  │  ├─ user-dashboard.html
 │  ├─ __init__.py
 │  ├─ ApplicationProgramInterface.py
 │  ├─ config.py
