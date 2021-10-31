@@ -79,13 +79,19 @@ def log_in():
 def user_dashboard():
     return render_template('user-dashboard.html', user=current_user.username, name=current_user.f_name)
 
+@views.route('/services')
+@login_required
+def services():
+    return render_template('services.html')
+
+@views.route('/book-services')
+@login_required
+def book_services():
+    return render_template('book-services.html')
+
 # User log out, redirects to homepage (index.html)
 @views.route('/logout')
 @login_required
 def log_out():
     logout_user()
     return redirect(url_for('views.home'))
-
-@views.route('/services')
-def services():
-    return render_template('services.html')

@@ -16,7 +16,7 @@
               {{user}}
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">Something</a></li>
+                <li><a class="dropdown-item" href="#">View Bill</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="{{url_for('views.log_out')}}">Log Out</a></li>
               </ul>
@@ -28,7 +28,7 @@
               Make Reservations
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="#">Book Services</a></li>
+              <li><a class="dropdown-item" href="{{url_for('views.book_services')}}">Book Services</a></li>
               <li><a class="dropdown-item" href="#">Book Hotel Rooms</a></li>
             </ul>
           </li>

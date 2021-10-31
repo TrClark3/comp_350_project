@@ -107,6 +107,7 @@ app/
 │  │  │  ├─ main.css
 │  ├─ templates/
 │  │  ├─ base.html
+│  │  ├─ book-services.html
 │  │  ├─ index.html
 │  │  ├─ login.html
 │  │  ├─ services.html
