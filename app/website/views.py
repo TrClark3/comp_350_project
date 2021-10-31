@@ -74,18 +74,20 @@ def make_reservation():
 
         cust = Customer.query.filter_by(username=username, password=password).first()
         if not cust:
-            db.session.add(Customer(username, password, ptype, pinfo))
+            cust = Customer(username, password, ptype, pinfo)
+            db.session.add(cust)
             db.session.commit()
 
         room = HotelRoom.query.filter_by(room_type=form.room_type.data, smoking=form.smoking.data).first()
         if room:
             reservation = HotelReservation.query.filter_by(check_in=form.start_date.data,
-                                                           check_out=form.end_date.data).first()
+                                                           check_out=form.end_date.data).all()
             if not reservation:
                 reservation = HotelReservation(room_num=room.room_num, cust_id=cust.cust_id,
                                                check_in=form.start_date.data, check_out=form.end_date.data)
                 db.session.add(reservation)
                 db.session.commit()
+                return redirect(url_for('views.thanks'))
             else:
                 # TODO: more info on the error messages
                 error = "A reservation is already made"

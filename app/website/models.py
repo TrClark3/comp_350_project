@@ -32,7 +32,7 @@ class User(UserMixin, db.Model):
     # Structure
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(50), unique=True)
-    password = db.Column(db.String(100))
+    password = db.Column(db.String(250))
     f_name = db.Column(db.String(32))
     l_name = db.Column(db.String(32))
     age = db.Column(db.Integer) 
@@ -70,7 +70,7 @@ class Customer(db.Model):
 
     cust_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(50))
-    password = db.Column(db.String(100))
+    password = db.Column(db.String(250))
     payment_type = db.Column(db.Enum(PaymentType))
     payment_info = db.Column(db.String(50))
 
