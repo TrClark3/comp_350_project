@@ -85,3 +85,7 @@ def user_dashboard():
 def log_out():
     logout_user()
     return redirect(url_for('views.home'))
+
+@views.route('/services')
+def services():
+    return render_template('services.html')
