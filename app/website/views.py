@@ -11,11 +11,13 @@ import json
 
 views = Blueprint('views', __name__)
 
+
 # Homepage. Uses index.html
 @views.route('/home')
 @views.route('/')
 def home():
     return render_template('index.html')
+
 
 # SignUp Page. Uses sign-up.html
 @views.route('/sign-up', methods=['GET', 'POST'])
@@ -43,14 +45,15 @@ def sign_up():
         except IntegrityError:
             db.session.rollback()
             error = 'Username already taken!'
-        
 
     return render_template('sign-up.html', form=form, error=error)
+
 
 # Sign up completed successfully. Uses thanks.html
 @views.route('/thanks')
 def thanks():
     return render_template('thanks.html')
+
 
 # Login Page. Uses login.html
 @views.route('/log-in', methods=['GET', 'POST'])
@@ -74,11 +77,31 @@ def log_in():
             
     return render_template('login.html', form=form, error=error)
 
+
 # User's dashboard page. Uses user-dashboard.html
 @views.route('/dashboard')
 @login_required
 def user_dashboard():
     return render_template('user-dashboard.html', user=current_user.username, name=current_user.f_name)
+
+
+@views.route('/services')
+@login_required
+def services():
+    return render_template('services.html')
+
+
+@views.route('/book-services')
+@login_required
+def book_services():
+    return render_template('book-services.html')
+
+
+@views.route('/information')
+@login_required
+def information():
+    return render_template('information.html')
+
 
 # User log out, redirects to homepage (index.html)
 @views.route('/logout')
@@ -86,6 +109,7 @@ def user_dashboard():
 def log_out():
     logout_user()
     return redirect(url_for('views.home'))
+
 
 # Admin Initialization (Step 1/2)
 @views.route('/admin-initialization', methods=['GET', 'POST'])
@@ -97,8 +121,8 @@ def admin_init():
 
     if form.validate_on_submit():
         if form.username.data == "admin" and form.password.data == "password":
-            admin_user = User(username='admin', password="password", first="root", last="root", age=100, 
-            is_admin=True)
+            admin_user = User(username='admin', password="password", first="root", last="root", age=100,
+                              is_admin=True)
             # Add admin user to database, if it doesn't already exist
             try:
                 db.session.add(admin_user)
@@ -113,6 +137,7 @@ def admin_init():
             error = "Wrong admin credentials."
             
     return render_template('admin-init.html', form=form, error=error)
+
 
 # Admin login (Step 2/2)
 @views.route('/admin-login', methods=['GET', 'POST'])
@@ -138,4 +163,4 @@ def admin_login():
             error = "Wrong admin credentials."
             
     return render_template('admin-login.html', form=form, error=error)
-    
+
