@@ -109,6 +109,7 @@ app/
 │  │  ├─ base.html
 │  │  ├─ book-services.html
 │  │  ├─ index.html
+│  │  ├─ information.html
 │  │  ├─ login.html
 │  │  ├─ services.html
 │  │  ├─ sign-up.html

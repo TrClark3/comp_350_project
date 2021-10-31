@@ -89,6 +89,11 @@ def services():
 def book_services():
     return render_template('book-services.html')
 
+@views.route('/information')
+@login_required
+def information():
+    return render_template('information.html')
+
 # User log out, redirects to homepage (index.html)
 @views.route('/logout')
 @login_required
