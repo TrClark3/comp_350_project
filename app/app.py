@@ -1,5 +1,4 @@
 from website import create_app
-from flask import url_for
 
 app = create_app()
 

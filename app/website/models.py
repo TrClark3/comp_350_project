@@ -105,6 +105,10 @@ class HotelRoom(db.Model):
         self.room_type = type
         self.smoking = smoking
 
+    def __init__(self, type, smoking):
+        self.room_type = type
+        self.smoking = smoking
+
 
 class HotelReservation(db.Model):
     __tablename__ = "hotelreservation"

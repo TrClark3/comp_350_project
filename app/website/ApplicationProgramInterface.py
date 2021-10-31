@@ -3,7 +3,92 @@ from werkzeug.security import generate_password_hash
 import logging
 
 from website import db
-from website.models import User, user_schema, users_schema
+from website.models import User, user_schema, users_schema, HotelRoom, Employee
+
+
+def dummy_data():
+    objects = [
+        User(username="JSmith1", password="jonnyboy", first="John", last="Smith", age=33),
+        User(username="GDylan", password="spa4321", first="George", last="Dylan", age=53),
+        User(username="AliceInWonderland", password="alice_spa123", first="Alice", last="Anston",
+             age=32),
+        User(username="JeffRedd", password="reddingJEFF39", first="Jeffrey", last="Redding", age=39),
+        User(username="ImKyle", password="IMtheREALkyle", first="Kyle", last="Hirokai-Berman",
+             age=28),
+        User(username="Brayden23", password="brayd_spa23", first="Brayden", last="Daniels", age=23),
+        User(username="BevSpa", password="bevspa_64", first="Beverly", last="Jacobs", age=64),
+        User(username="JennyR", password="jenspa_34", first="Jennifer", last="Cherry", age=34),
+        User(username="gaben", password="valve$$$", first="Gabe", last="Newell", age=59),
+
+        Employee(firstname="Morgan", lastname="Greensburough"),
+        Employee(firstname="Tim", lastname="Heidecker"),
+        Employee(firstname="Eric", lastname="Wareheim"),
+        Employee(firstname="Bruce", lastname="Floyd"),
+        Employee(firstname="Hassan", lastname="Abrahim"),
+        Employee(firstname="Jackson", lastname="Tucker"),
+        Employee(firstname="Shawn", lastname="Goodwin"),
+        Employee(firstname="Ria", lastname="Rodrigez"),
+        Employee(firstname="Sienna", lastname="Anderson"),
+        Employee(firstname="Hazel", lastname="Stanton"),
+        Employee(firstname="Irene", lastname="Morrison"),
+        Employee(firstname="Yasmin", lastname="Price"),
+
+        HotelRoom(type="JUNIOR", smoking=0),
+        HotelRoom(type="JUNIOR", smoking=0),
+        HotelRoom(type="JUNIOR", smoking=0),
+        HotelRoom(type="JUNIOR", smoking=0),
+        HotelRoom(type="JUNIOR", smoking=0),
+        HotelRoom(type="JUNIOR", smoking=0),
+        HotelRoom(type="JUNIOR", smoking=0),
+        HotelRoom(type="JUNIOR", smoking=0),
+        HotelRoom(type="JUNIOR", smoking=0),
+        HotelRoom(type="JUNIOR", smoking=0),
+        HotelRoom(type="JUNIOR", smoking=0),
+        HotelRoom(type="JUNIOR", smoking=0),
+        HotelRoom(type="JUNIOR", smoking=0),
+        HotelRoom(type="JUNIOR", smoking=0),
+        HotelRoom(type="JUNIOR", smoking=0),
+        HotelRoom(type="JUNIOR", smoking=0),
+        HotelRoom(type="JUNIOR", smoking=1),
+        HotelRoom(type="JUNIOR", smoking=1),
+        HotelRoom(type="JUNIOR", smoking=1),
+        HotelRoom(type="JUNIOR", smoking=1),
+        HotelRoom(type="JUNIOR", smoking=1),
+        HotelRoom(type="JUNIOR", smoking=1),
+        HotelRoom(type="JUNIOR", smoking=1),
+        HotelRoom(type="JUNIOR", smoking=1),
+        HotelRoom(type="JUNIOR", smoking=1),
+        HotelRoom(type="JUNIOR", smoking=1),
+        HotelRoom(type="JUNIOR", smoking=1),
+        HotelRoom(type="JUNIOR", smoking=1),
+        HotelRoom(type="JUNIOR", smoking=1),
+        HotelRoom(type="JUNIOR", smoking=1),
+        HotelRoom(type="JUNIOR", smoking=1),
+        HotelRoom(type="JUNIOR", smoking=1),
+        HotelRoom(type="QUEEN", smoking=0),
+        HotelRoom(type="QUEEN", smoking=0),
+        HotelRoom(type="QUEEN", smoking=0),
+        HotelRoom(type="QUEEN", smoking=0),
+        HotelRoom(type="QUEEN", smoking=0),
+        HotelRoom(type="QUEEN", smoking=1),
+        HotelRoom(type="QUEEN", smoking=1),
+        HotelRoom(type="QUEEN", smoking=1),
+        HotelRoom(type="QUEEN", smoking=1),
+        HotelRoom(type="QUEEN", smoking=1),
+        HotelRoom(type="KING", smoking=0),
+        HotelRoom(type="KING", smoking=0),
+        HotelRoom(type="KING", smoking=0),
+        HotelRoom(type="KING", smoking=1),
+        HotelRoom(type="KING", smoking=1),
+        HotelRoom(type="KING", smoking=1)
+    ]
+
+    for obj in objects:
+        db.session.add(obj)
+        db.session.flush()
+
+    db.session.commit()
+
 
 userApi = Blueprint('userApi', __name__)
 
