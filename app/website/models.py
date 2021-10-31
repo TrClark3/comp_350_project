@@ -11,7 +11,6 @@ from flask_admin.contrib.sqla import ModelView
 import enum
 
 
-
 # Enumerations
 class PaymentType(enum.Enum):
     CC = "CC"

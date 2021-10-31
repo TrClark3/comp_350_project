@@ -34,8 +34,8 @@ def sign_up():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
 
         # Create new user from form data
-        new_user = User(username=form.username.data, password=hashed_password, 
-        first=form.f_name.data, last=form.l_name.data, age = 0, is_admin=False)
+        new_user = User(username=form.username.data, password=hashed_password,
+                        first=form.f_name.data, last=form.l_name.data, age=0, is_admin=False)
         
         # Add user to database, if username doesn't already exist
         try:
