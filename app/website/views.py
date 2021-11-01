@@ -73,7 +73,9 @@ def make_reservation():
         ptype = form.payment_type.data
         pinfo = form.payment_info.data
 
-        cust = Customer.query.filter_by(username=username, password=password).first()
+        # TODO: fix bug where it creats multiple customers
+        # might be password hashes not matching causing it to make a new customer
+        cust = Customer.query.filter_by(username=username, password=password).all()
         if not cust:
             cust = Customer(username, password, ptype, pinfo)
             db.session.add(cust)
