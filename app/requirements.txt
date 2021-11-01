@@ -8,5 +8,6 @@ marshmallow-sqlalchemy
 flask_bootstrap
 flask_wtf
 wtforms
-wtforms.validators
+wtforms-validators
 flask_login
+flask_admin

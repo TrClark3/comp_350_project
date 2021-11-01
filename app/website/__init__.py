@@ -3,11 +3,13 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
+from flask_admin import Admin
 
 db = SQLAlchemy()
 ma = Marshmallow()
 login_manager = LoginManager()
 bootstrap = Bootstrap()
+admin = Admin()
 
 
 def create_app():
@@ -22,6 +24,7 @@ def create_app():
     db.init_app(app)
     login_manager.init_app(app)
     bootstrap.init_app(app)
+    admin.init_app(app)
 
     from .views import views
     from website.ApplicationProgramInterface import userApi, dummy_data
