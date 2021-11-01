@@ -26,7 +26,7 @@ def create_app():
     bootstrap.init_app(app)
     admin.init_app(app)
 
-    from .views import views
+    from website.views import views
     from website.ApplicationProgramInterface import userApi, dummy_data
 
     app.register_blueprint(userApi, url_prefix='/api')

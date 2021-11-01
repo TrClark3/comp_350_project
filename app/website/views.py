@@ -6,7 +6,6 @@ from sqlalchemy.exc import IntegrityError
 
 from website import db
 from website.models import *
-import json
 
 views = Blueprint('views', __name__)
 
