@@ -32,7 +32,8 @@ def create_app():
     app.register_blueprint(userApi, url_prefix='/api')
     app.register_blueprint(views, url_prefix='/')
 
-    db.create_all(app=app)
-    dummy_data()
+    with app.app_context():
+        db.create_all(app=app)
+        dummy_data()
 
     return app
