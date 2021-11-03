@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
+from sqlalchemy.exc import IntegrityError
 import logging
 
 from website import db
@@ -83,12 +84,22 @@ def dummy_data():
         HotelRoom(type="KING", smoking=1),
         HotelRoom(type="KING", smoking=1)
     ]
+    added = False
 
     for obj in objects:
-        db.session.add(obj)
-        db.session.flush()
+        try:
+            db.session.add(obj)
+            added = True
+        except IntegrityError:
+            db.session.rollback()
+            added = False
+            continue
+        finally:
+            if added:
+                db.session.flush()
 
-    db.session.commit()
+    if added:
+        db.session.commit()
 
 
 userApi = Blueprint('userApi', __name__)
