@@ -87,16 +87,23 @@ def dummy_data():
     added = False
 
     for obj in objects:
-        try:
+        exists = False
+
+        # Checks if exists
+        if isinstance(obj, User):
+            exists = db.session.query(User.user_id).filter_by(password=obj.password).scalar()
+        else:
+            if isinstance(obj, Employee):
+                exists = db.session.query(Employee.emp_id).filter_by(f_name=obj.f_name,l_name=obj.l_name).scalar()
+            elif isinstance(obj, HotelRoom):
+                exists = db.session.query(HotelRoom.room_num).filter_by()
+
+        # adds object to DB
+
+        if not exists:
             db.session.add(obj)
+            db.session.flush()
             added = True
-        except IntegrityError:
-            db.session.rollback()
-            added = False
-            continue
-        finally:
-            if added:
-                db.session.flush()
 
     if added:
         db.session.commit()
