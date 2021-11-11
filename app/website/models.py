@@ -106,7 +106,7 @@ class HotelRoom(db.Model):
 
     room_num = db.Column(db.Integer, primary_key=True, autoincrement=True)
     room_type = db.Column(db.Enum(RoomType))
-    smoking = db.Column(db.Boolean)
+    smoking = db.Column(db.Boolean, default=0, nullable=False)
 
     def __init__(self, number, type, smoking):
         self.room_num = number
