@@ -1,10 +1,14 @@
-from website import db, ma, login_manager
+import re
+from flask import app, url_for, redirect, Blueprint
+from flask_login.mixins import AnonymousUserMixin
+from werkzeug.exceptions import abort
+from website import db, ma, login_manager, admin, views
 from flask_wtf import FlaskForm 
-from wtforms import StringField, PasswordField, BooleanField
+from wtforms import StringField, PasswordField, BooleanField, DateField, SelectField
 from wtforms.validators import InputRequired, Email, Length
-from flask_login import UserMixin
+from flask_login import UserMixin, current_user
+from flask_admin.contrib.sqla import ModelView
 import enum
-
 
 
 # Enumerations
@@ -33,37 +37,39 @@ class User(UserMixin, db.Model):
     # Structure
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(50), unique=True)
-    password = db.Column(db.String(100))
+    password = db.Column(db.String(250))
     f_name = db.Column(db.String(32))
     l_name = db.Column(db.String(32))
     age = db.Column(db.Integer) 
+    is_admin = db.Column(db.Boolean, default=False)
     # (NOTE) Age should probably be swapped out with an email field. Thoughts? - Travis
 
     def get_id(self):
-        return (self.user_id)
+        return self.user_id
 
+    # Return user id of logged in user for current session
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
 
-    def __init__(self, username, password, first, last, age):
+    def __init__(self, username, password, first, last, age, is_admin):
         self.username = username
         self.password = password
         self.f_name = first
         self.l_name = last
         self.age = age
-#Login Form Model for existing Usersused in views.log_in route)
-class LoginForm(FlaskForm):
-    username = StringField('username', validators=[InputRequired(), Length(min=4, max=50)])
-    password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=100)])
-    remember = BooleanField('Remember me')
+        self.is_admin = is_admin
 
-#SignUp Form Model for new Users (used in views.sign_up route)
-class SignUpForm(FlaskForm):
-    username = StringField('username', validators=[InputRequired(), Length(min=4, max=50)])
-    password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=100)])
-    f_name = StringField('first name', validators=[InputRequired(), Length(min=2, max=32)])
-    l_name = StringField('last name', validators=[InputRequired(), Length(min=2, max=32)])
+
+# Specifies properties for unsigned in Users
+class Anonymous(AnonymousUserMixin):
+    def __init__(self):
+        self.username = 'Guest'
+        self.is_admin= False
+
+
+login_manager.anonymous_user = Anonymous
+
 
 class Employee(db.Model):
     __tablename__ = "employee"
@@ -71,10 +77,12 @@ class Employee(db.Model):
     emp_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     f_name = db.Column(db.String(50))
     l_name = db.Column(db.String(50))
+    is_admin = db.Column(db.Boolean, default=True)
 
-    def __init__(self, firstname, lastname):
+    def __init__(self, firstname, lastname, is_admin):
         self.f_name = firstname
         self.l_name = lastname
+        self.is_admin = is_admin
 
 
 class Customer(db.Model):
@@ -82,7 +90,7 @@ class Customer(db.Model):
 
     cust_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(50))
-    password = db.Column(db.String(50))
+    password = db.Column(db.String(250))
     payment_type = db.Column(db.Enum(PaymentType))
     payment_info = db.Column(db.String(50))
 
@@ -98,7 +106,7 @@ class HotelRoom(db.Model):
 
     room_num = db.Column(db.Integer, primary_key=True, autoincrement=True)
     room_type = db.Column(db.Enum(RoomType))
-    smoking = db.Column(db.Boolean)
+    smoking = db.Column(db.Boolean, default=0, nullable=False)
 
     def __init__(self, number, type, smoking):
         self.room_num = number
@@ -115,8 +123,7 @@ class HotelReservation(db.Model):
     check_in = db.Column(db.Date)
     check_out = db.Column(db.Date)
 
-    def __init__(self, res_id, room_num, cust_id, check_in, check_out):
-        self.res_id = res_id
+    def __init__(self, room_num, cust_id, check_in, check_out):
         self.room_num = room_num
         self.cust_id = cust_id
         self.check_in = check_in
@@ -147,8 +154,7 @@ class SpaReservation(db.Model):
     end_time = db.Column(db.Time)
     service_type = db.Column(db.Enum(ServiceType), db.ForeignKey('spaservice.service_type'))
 
-    def __init__(self, res_id, room_num, cust_id, spa_start, start_time, end_time, service_type):
-        self.res_id = res_id
+    def __init__(self, room_num, cust_id, spa_start, start_time, end_time, service_type):
         self.room_num = room_num
         self.cust_id = cust_id
         self.spa_start = spa_start
@@ -200,5 +206,60 @@ class SpaReservationSchema(ma.SQLAlchemyAutoSchema):
         include_fk = True
 
 
+# Admin Model View
+class AdminModelView(ModelView):
+
+    # Check if user is admin. Only one user should have this privledge
+    # Admin then has right to add employee objects with same privledge
+    def is_accessible(self):
+        if current_user.is_admin:
+            return current_user.is_authenticated
+        else:
+            abort(401)
+
+
+admin.add_view(AdminModelView(User, db.session))
+admin.add_view(AdminModelView(Employee, db.session))
+
 user_schema = UsersSchema()
 users_schema = UsersSchema(many=True)
+customer_schema = CustomerSchema()
+rooms_schema = HotelReservationSchema(many=True)
+services_schema = SpaServiceSchema(many=True)
+
+
+# Login Form Model for existing Usersused in views.log_in route)
+class LoginForm(FlaskForm):
+    username = StringField('username', validators=[InputRequired(), Length(min=4, max=50)])
+    password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=100)])
+    remember = BooleanField('Remember me')
+
+
+# SignUp Form Model for new Users (used in views.sign_up route)
+class SignUpForm(FlaskForm):
+    username = StringField('username', validators=[InputRequired(), Length(min=4, max=50)])
+    password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=100)])
+    f_name = StringField('first name', validators=[InputRequired(), Length(min=2, max=32)])
+    l_name = StringField('last name', validators=[InputRequired(), Length(min=2, max=32)])
+
+
+class ReservationForm(FlaskForm):
+    room_type = SelectField('Room Type', choices=[('KING', 'King'), ('QUEEN', 'Queen'), ('JUNIOR', 'Junior')])
+    smoking = BooleanField('Smoking')
+    start_date = DateField('start date', validators=[InputRequired()])
+    end_date = DateField('end date', validators=[InputRequired()])
+    username = StringField('Username', validators=[InputRequired(), Length(min=4,max=50)])
+    password = StringField('Password', validators=[InputRequired(), Length(min=4,max=50)])
+    payment_type = SelectField('Payment Type', choices=[('CC', 'Credit Card'), ('CASH', 'Cash'), ('CHECK', 'Check')])
+    payment_info = StringField('Payment Info', validators=[InputRequired(), Length(min=4,max=50)])
+
+
+class ReservationSearchForm(FlaskForm):
+    start_date = DateField('start date', validators=[InputRequired()])
+    end_date = DateField('end date', validators=[InputRequired()])
+
+
+class AdminSignUpForm(FlaskForm):
+    username = StringField('username', validators=[InputRequired(), Length(min=4, max=50)])
+    password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=100)])
+

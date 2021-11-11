@@ -1,6 +1,7 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %} Dashboard {% endblock %}
+{% block title %} Create Reservation {% endblock %}
 
 {% block content %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -46,8 +47,22 @@
       </div>
     </div>
   </nav>
-  <br> <!--Line break to space nav bar and page content, Delete if necessary-->
+<br> <!--Line break to space nav bar and page content, Delete if necessary-->
 
-  <iframe src="https://giphy.com/embed/ASd0Ukj0y3qMM" width="480" height="360" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
-  <h3>Hiya, {{name}}</h3>
-  {% endblock %}
+<div class="container">
+
+	{% if error %}
+		<p class="error"><strong>Error: </strong> {{ error }} </p>
+	{% endif %}
+
+	<form class="form-dates" method="POST">
+        {{ form.hidden_tag() }}
+        {{ wtf.form_field(form.start_date) }}
+        {{ wtf.form_field(form.end_date) }}
+        <br>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Check Dates</button>
+    </form>
+	
+</div>
+
+{% endblock %}
