@@ -33,7 +33,7 @@ def sign_up():
 
         # Create new user from form data
         new_user = User(username=form.username.data, password=hashed_password,
-                        first=form.f_name.data, last=form.l_name.data, age=0, is_admin=False)
+                        first=form.f_name.data, last=form.l_name.data, pay_type="CASH", pay_info="0", is_admin=False)
 
         # Add user to database, if username doesn't already exist
         try:
@@ -172,8 +172,8 @@ def admin_init():
 
     if form.validate_on_submit():
         if form.username.data == "admin" and form.password.data == "password":
-            admin_user = User(username='admin', password="password", first="root", last="root", age=100,
-                              is_admin=True)
+            admin_user = User(username='admin', password="password", first="root", last="root",
+            pay_type="CASH", pay_info="0", is_admin=True)
             # Add admin user to database, if it doesn't already exist
             try:
                 db.session.add(admin_user)

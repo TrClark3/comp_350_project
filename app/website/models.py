@@ -39,10 +39,9 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(250))
     f_name = db.Column(db.String(32))
     l_name = db.Column(db.String(32))
-    payment_type = db.Column(db.Enum(PaymentType))
-    payment_info = db.Column(db.String(50))
+    payment_type = db.Column(db.Enum(PaymentType), default="CASH")
+    payment_info = db.Column(db.String(50), default="0")
     is_admin = db.Column(db.Boolean, default=False)
-    # (NOTE) Age should probably be swapped out with an email field. Thoughts? - Travis
 
     def get_id(self):
         return self.user_id
