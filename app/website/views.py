@@ -1,4 +1,3 @@
-from re import A
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
@@ -188,7 +187,7 @@ def admin_init():
         else:
             error = "Wrong admin credentials."
             
-    return render_template('admin-init.html', form=form, error=error)
+    return render_template('admin/admin-init.html', form=form, error=error)
 
 
 # Admin login (Step 2/2)
@@ -207,12 +206,16 @@ def admin_login():
 
             if admin:
                 login_user(admin)
-                return redirect(url_for('admin.index'))
+                return redirect(url_for('views.admin_home'))
             flash("Admin account not yet created. Please perform Admin Initialization step first.", "warning")    
             return redirect(url_for('views.admin_login'))
 
         else:
             error = "Wrong admin credentials."
             
-    return render_template('admin-login.html', form=form, error=error)
+    return render_template('admin/admin-login.html', form=form, error=error)
 
+@views.route('/admin')
+@login_required
+def admin_home():
+    return redirect(url_for('admin.index'))

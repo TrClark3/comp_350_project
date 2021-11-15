@@ -220,6 +220,11 @@ class AdminModelView(ModelView):
 
 admin.add_view(AdminModelView(User, db.session))
 admin.add_view(AdminModelView(Employee, db.session))
+admin.add_view(AdminModelView(Customer, db.session))
+admin.add_view(AdminModelView(HotelReservation, db.session))
+admin.add_view(AdminModelView(HotelRoom, db.session))
+admin.add_view(AdminModelView(SpaReservation, db.session))
+admin.add_view(AdminModelView(SpaService, db.session))
 
 user_schema = UsersSchema()
 users_schema = UsersSchema(many=True)
