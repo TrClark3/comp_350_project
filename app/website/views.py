@@ -74,9 +74,9 @@ def make_reservation():
 
         # TODO: fix bug where it creats multiple customers
         # might be password hashes not matching causing it to make a new customer
-        cust = Customer.query.filter_by(username=username, password=password).all()
+        cust = User.query.filter_by(username=username, password=password).all()
         if not cust:
-            cust = Customer(username, password, ptype, pinfo)
+            cust = User(username, password, ptype, pinfo)
             db.session.add(cust)
             db.session.commit()
 
@@ -85,7 +85,7 @@ def make_reservation():
             reservation = HotelReservation.query.filter_by(check_in=form.start_date.data,
                                                            check_out=form.end_date.data).all()
             if not reservation:
-                reservation = HotelReservation(room_num=room.room_num, cust_id=cust.cust_id,
+                reservation = HotelReservation(room_num=room.room_num, user_id=cust.user_id,
                                                check_in=form.start_date.data, check_out=form.end_date.data)
                 db.session.add(reservation)
                 db.session.commit()
