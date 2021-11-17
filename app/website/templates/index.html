@@ -1,48 +1,14 @@
 <!-- This is our "home" page. -->
+<!-- uses basic nav-bar -->
+{% set loggedIn = False %}
 {% extends 'base.html'%}
+<!-- only displays static html.. :( -->
 
 {% block title %} MiYE Homepage {% endblock %}
 
+{%block navbars %} {{ super() }} {%endblock%}
+
 {% block content %}
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="{{url_for('views.home')}}">Mud in Your Eye</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" href="{{url_for('views.log_in')}}">Log In</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{url_for('views.sign_up')}}">Sign Up</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Services
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="#">View Available Services</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Admin
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="{{url_for('views.admin_init')}}">Admin Initialization</a></li>
-              <li><a class="dropdown-item" href="{{url_for('views.admin_login')}}">Admin Login</a></li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-  <br> <!--Line break to space nav bar and page content, Delete if necessary-->
 <div  style="margin-left:1em">
   <h5> Welcome to Mud in Your Eye</h5><hr><br>
   We are a hot springs health spa that provides our guests with a range of services including <br>
