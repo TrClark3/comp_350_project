@@ -1,6 +1,12 @@
 <!-- This is our "home" page. -->
-<!-- uses basic nav-bar -->
-{% set loggedIn = False %}
+<!-- Page is accessible to both logged in or logged out users
+  Nav bar must be dynamically displayed via calling route in views.py -->
+{% if is_logged_in %}
+  {% set loggedIn = True %}
+{% else %}
+  {% set loggedIn = False %}
+{% endif %}
+
 {% extends 'base.html'%}
 
 {% block title %} MiYE Homepage {% endblock %}

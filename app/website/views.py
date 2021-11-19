@@ -14,7 +14,8 @@ views = Blueprint('views', __name__)
 @views.route('/home')
 @views.route('/')
 def home():
-    return render_template('index.html')
+    is_logged_in = current_user.is_authenticated
+    return render_template('index.html', user=current_user.username, is_logged_in = is_logged_in)
 
 
 # SignUp Page. Uses sign-up.html
@@ -97,13 +98,14 @@ def make_reservation():
         else:
             error = "Room selected Is not available. Choose another."
 
-    return render_template('create-reservation.html', form=form, error=error)
+    return render_template('create-reservation.html', user=current_user.username, form=form, error=error)
 
 
 # Sign up completed successfully. Uses thanks.html
 @views.route('/thanks')
 def thanks():
-    return render_template('thanks.html')
+    is_logged_in = current_user.is_authenticated
+    return render_template('thanks.html', user=current_user.username, is_logged_in = is_logged_in)
 
 
 # Login Page. Uses login.html
@@ -113,7 +115,7 @@ def log_in():
     # Create form from LoginForm class in models.py
     form = LoginForm()
     # Holds possible error message during log in process
-    error = None
+    errors = None
 
     if form.validate_on_submit():
 
@@ -124,9 +126,9 @@ def log_in():
                 login_user(user, remember=form.remember.data)
                 return redirect(url_for('views.user_dashboard'))
             
-        error = "Username or password is incorrect. Please try again."
+        errors = "Username or password is incorrect. Please try again."
             
-    return render_template('login.html', form=form, error=error)
+    return render_template('login.html', form=form, error=errors)
 
 
 # User's dashboard page. Uses user-dashboard.html
@@ -137,21 +139,21 @@ def user_dashboard():
 
 
 @views.route('/services')
-@login_required
 def services():
-    return render_template('services.html')
+    is_logged_in = current_user.is_authenticated
+    return render_template('services.html', user=current_user.username, is_logged_in = is_logged_in)
 
 
 @views.route('/book-services')
 @login_required
 def book_services():
-    return render_template('book-services.html')
+    return render_template('book-services.html', user=current_user.username)
 
 
 @views.route('/information')
-@login_required
 def information():
-    return render_template('information.html')
+    is_logged_in = current_user.is_authenticated
+    return render_template('information.html', user=current_user.username, is_logged_in = is_logged_in)
 
 
 # User log out, redirects to homepage (index.html)
