@@ -45,7 +45,7 @@ PRIMARY KEY(rid),
 FOREIGN KEY(cust_id) REFERENCES customer(cust_id)
 );
 
-drop table hotel_reservation;
+-- drop table hotel_reservation;
 insert into hotel_reservation(rid, roomnum, cust_id, checkin, checkout) VALUES (0, 1, 1, "2021-10-1", "2021-10-2");
 select * from hotel_reservation;
 
@@ -56,7 +56,7 @@ start_time time,
 end_time time,
 PRIMARY KEY(stype)
 );
-drop table spa_service;
+-- drop table spa_service;
 insert into spa_service(stype, duration) values ("SERVICE1", 1);
 insert into spa_service(stype, duration) values ("SERVICE2", 2);
 insert into spa_service(stype, duration) values ("SERVICE3", 3);
@@ -78,14 +78,14 @@ FOREIGN KEY(stype) REFERENCES spa_service(stype)
 
 insert into spa_reservation(rid, roomnum, cust_id, spa_start, start_time, end_time) VALUES (0, 1, 1, "2021-10-1", "12:00:00", "14:00:00");
 select * from spa_reservation;
-drop table spa_reservation;
+-- drop table spa_reservation;
 -- -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 create view h_res_private as 
 SELECT rid, h.roomnum, c.usrname, c.fname, c.lname, checkin, checkout, h.rtype, h.smoke, c.pmt_type, c.pmt_info from hotel_reservation r
 join hotel_room h on h.roomnum = r.roomnum
 join customer c on c.cust_id = r.cust_id;
 
-drop view h_res_private;
+-- drop view h_res_private;
 select * from h_res_private;
 
 -- -----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -103,34 +103,8 @@ ir: BEGIN
 END//
 delimiter ;
 
-drop procedure isreserved;
--- -----------------------------------------------------------------------------------------------------------------------------------------------------------------
--- get cust_id from username
--- get service duration from stype
+-- drop procedure isreserved;
 
-
--- delimiter //
--- create procedure make_spa_reservation(IN usrname VARCHAR(50), IN roomnum int, IN start_date DATE, IN start_time TIME, IN stype VARCHAR(8))	
--- 	BEGIN
--- 	DECLARE ERR INT;
--- 	DECLARE duration double;
---     DECLARE cust_id int;
---     DECLARE roomnum int;
---     DECLARE reserved int;
--- 			SELECT c.cust_id into cust_id from customer c where c.usrname = usrname;
--- 			call isreserved(roomnum, checkin, checkout);		-- check if there is a current hotel reservation under this customer and use that room if exists
--- 			SELECT FOUND_ROWS() into reserved;
--- 			if reserved > 0 THEN
--- 				SELECT r.roomnum into roomnum from hotel_reservation where h.cust_id = cust_id;
--- 			ELSE -- if no current hotel reservation, join hotel_room with hotel_reservation and do intersection on hotel_room to see what is available and pick first result for roomnum
--- 			SELECT distinct roomnum from hotel_room h 
---             SELECT s.duration into duration from spa_service s where s.stype = stype;
--- 	
--- 	INSERT INTO spa_reservation VALUES (0, roomnum
--- END//
--- delimiter ;    
-
--- -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 delimiter //
 create procedure make_hotel_reservation(IN usrname VARCHAR(50), IN roomnum INT, IN checkin DATE, IN checkout DATE)
 	BEGIN
@@ -146,7 +120,7 @@ INSERT INTO hotel_reservation VALUES (0, 2, 1, "2021-11-11", "2021-11-13");
 delete from hotel_reservation where roomnum = 2;
 call make_hotel_reservation("JSmith1", 2, "2021-11-11", "2021-11-13"); -- success!!
 select * from hotel_reservation;
-drop procedure make_hotel_reservation;
+-- drop procedure make_hotel_reservation;
 -- -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 delimiter //
 create procedure cancel_hotel_reservation(IN usrname VARCHAR(50), IN checkin DATE) -- remove current reservation if necessary
@@ -158,7 +132,7 @@ END//
 delimiter ;
 select * from hotel_reservation;
 call cancel_hotel_reservation("JSmith1", "2021-10-1");
-drop procedure cancel_hotel_reservation;
+-- drop procedure cancel_hotel_reservation;
 -- -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 delimiter //
 create procedure cancel_spa_reservation(IN cust_id int, spa_start date, spa_end date) -- remove current reservation if necessary
