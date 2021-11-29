@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash
 import logging
 
 from website import db
-from website.models import User, user_schema, users_schema, HotelReservation, rooms_schema, Customer, customer_schema
+from website.models import User, user_schema, users_schema, HotelReservation, rooms_schema
 
 userApi = Blueprint('userApi', __name__)
 roomApi = Blueprint('roomApi', __name__)

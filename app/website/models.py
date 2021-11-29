@@ -1,4 +1,3 @@
-import re
 from flask import app, url_for, redirect, Blueprint
 from flask_login.mixins import AnonymousUserMixin
 from werkzeug.exceptions import abort
@@ -40,9 +39,9 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(250))
     f_name = db.Column(db.String(32))
     l_name = db.Column(db.String(32))
-    age = db.Column(db.Integer) 
+    payment_type = db.Column(db.Enum(PaymentType), default="CASH")
+    payment_info = db.Column(db.String(50), default="0")
     is_admin = db.Column(db.Boolean, default=False)
-    # (NOTE) Age should probably be swapped out with an email field. Thoughts? - Travis
 
     def get_id(self):
         return self.user_id
@@ -52,12 +51,13 @@ class User(UserMixin, db.Model):
     def load_user(user_id):
         return User.query.get(int(user_id))
 
-    def __init__(self, username, password, first, last, age, is_admin):
+    def __init__(self, username, password, first, last, pay_type, pay_info, is_admin):
         self.username = username
         self.password = password
         self.f_name = first
         self.l_name = last
-        self.age = age
+        self.payment_type = pay_type
+        self.payment_info = pay_info
         self.is_admin = is_admin
 
 
@@ -85,22 +85,6 @@ class Employee(db.Model):
         self.is_admin = is_admin
 
 
-class Customer(db.Model):
-    __tablename__ = "customer"
-
-    cust_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    username = db.Column(db.String(50))
-    password = db.Column(db.String(250))
-    payment_type = db.Column(db.Enum(PaymentType))
-    payment_info = db.Column(db.String(50))
-
-    def __init__(self, username, password, ptype, pinfo):
-        self.username = username
-        self.password = password
-        self.payment_type = ptype
-        self.payment_info = pinfo
-
-
 class HotelRoom(db.Model):
     __tablename__ = "hotelroom"
 
@@ -119,7 +103,7 @@ class HotelReservation(db.Model):
 
     res_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     room_num = db.Column(db.Integer)
-    cust_id = db.Column(db.Integer, db.ForeignKey('customer.cust_id'))
+    cust_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
     check_in = db.Column(db.Date)
     check_out = db.Column(db.Date)
 
@@ -148,7 +132,7 @@ class SpaReservation(db.Model):
 
     res_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     room_num = db.Column(db.Integer, db.ForeignKey('hotelreservation.res_id'))
-    cust_id = db.Column(db.Integer, db.ForeignKey('customer.cust_id'))
+    cust_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
     spa_start = db.Column(db.Date)
     start_time = db.Column(db.Time)
     end_time = db.Column(db.Time)
@@ -173,12 +157,6 @@ class UsersSchema(ma.SQLAlchemyAutoSchema):
 class EmployeesSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Employee
-        include_fk = True
-
-
-class CustomerSchema(ma.SQLAlchemyAutoSchema):
-    class Meta:
-        model = Customer
         include_fk = True
 
 
@@ -220,10 +198,13 @@ class AdminModelView(ModelView):
 
 admin.add_view(AdminModelView(User, db.session))
 admin.add_view(AdminModelView(Employee, db.session))
+admin.add_view(AdminModelView(HotelReservation, db.session))
+admin.add_view(AdminModelView(HotelRoom, db.session))
+admin.add_view(AdminModelView(SpaReservation, db.session))
+admin.add_view(AdminModelView(SpaService, db.session))
 
 user_schema = UsersSchema()
 users_schema = UsersSchema(many=True)
-customer_schema = CustomerSchema()
 rooms_schema = HotelReservationSchema(many=True)
 services_schema = SpaServiceSchema(many=True)
 
