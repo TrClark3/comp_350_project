@@ -229,10 +229,6 @@ class ReservationForm(FlaskForm):
     smoking = BooleanField('Smoking')
     start_date = DateField('start date', validators=[InputRequired()])
     end_date = DateField('end date', validators=[InputRequired()])
-    username = StringField('Username', validators=[InputRequired(), Length(min=4,max=50)])
-    password = StringField('Password', validators=[InputRequired(), Length(min=4,max=50)])
-    payment_type = SelectField('Payment Type', choices=[('CC', 'Credit Card'), ('CASH', 'Cash'), ('CHECK', 'Check')])
-    payment_info = StringField('Payment Info', validators=[InputRequired(), Length(min=4,max=50)])
 
 
 class ReservationSearchForm(FlaskForm):

@@ -68,25 +68,13 @@ def make_reservation():
     error = None
 
     if form.validate_on_submit():
-        username = form.username.data
-        password = generate_password_hash(form.password.data)
-        ptype = form.payment_type.data
-        pinfo = form.payment_info.data
-
-        # TODO: fix bug where it creats multiple customers
-        # might be password hashes not matching causing it to make a new customer
-        cust = User.query.filter_by(username=username, password=password).all()
-        if not cust:
-            cust = User(username, password, ptype, pinfo)
-            db.session.add(cust)
-            db.session.commit()
 
         room = HotelRoom.query.filter_by(room_type=form.room_type.data, smoking=form.smoking.data).first()
         if room:
             reservation = HotelReservation.query.filter_by(check_in=form.start_date.data,
                                                            check_out=form.end_date.data).all()
             if not reservation:
-                reservation = HotelReservation(room_num=room.room_num, user_id=cust.user_id,
+                reservation = HotelReservation(room_num=room.room_num, cust_id=current_user.user_id,
                                                check_in=form.start_date.data, check_out=form.end_date.data)
                 db.session.add(reservation)
                 db.session.commit()
