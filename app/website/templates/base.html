@@ -61,6 +61,9 @@
                   <li><a class="dropdown-item" href="{{url_for('views.information')}}">Information</a></li>
                 </ul>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{url_for('views.menu')}}">Dining</a>
+              </li>
             </ul>
           </div>
         </div>
@@ -88,10 +91,9 @@
                   Services
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="#">View Available Services</a></li>
-                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                  <li><a class="dropdown-item" href="{{url_for('views.services')}}">View Available Services</a></li>
                   <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                  <li><a class="dropdown-item" href="{{url_for('views.information')}}">Information</a></li>
                 </ul>
               </li>
               <li class="nav-item dropdown">

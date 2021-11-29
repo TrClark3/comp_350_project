@@ -137,9 +137,9 @@ def user_dashboard():
 
 
 @views.route('/services')
-@login_required
 def services():
-    return render_template('services.html')
+    is_logged_in = current_user.is_authenticated
+    return render_template('services.html', is_logged_in = is_logged_in)
 
 
 @views.route('/book-services')
@@ -149,10 +149,14 @@ def book_services():
 
 
 @views.route('/information')
-@login_required
 def information():
-    return render_template('information.html')
+    is_logged_in = current_user.is_authenticated
+    return render_template('information.html', is_logged_in = is_logged_in)
 
+@views.route('/menu')
+@login_required
+def menu():
+    return render_template('menu.html')
 
 # User log out, redirects to homepage (index.html)
 @views.route('/logout')
