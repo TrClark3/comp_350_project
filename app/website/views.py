@@ -62,7 +62,7 @@ def sign_up():
 def check_dates(res_start, res_end, start, end):
     earliest_end = min(res_end, end)
     latest_start = max(res_start, start)
-    overlap = earliest_end - latest_start
+    overlap = (earliest_end - latest_start).days + 1
     return overlap  # + = overlap, 0 = same dates, - = no overlap
 
 
@@ -106,14 +106,10 @@ def make_reservation():
 
             # Joins and displays ALL HotelReservations with the Information of the Room
             # filtered by the room_type and if it is smoking or not
-            reservations_made = HotelReservation.query.join(HotelRoom, HotelReservation.room_num == HotelRoom.room_num) \
-                .add_columns(HotelReservation.res_id, HotelReservation.check_in, HotelReservation.check_out,
-                             HotelRoom.room_num, HotelRoom.room_type, HotelRoom.smoking) \
-                .filter_by(room_type=room_type, smoking=room_smoking) \
-                .all()
+            reservations_made = HotelReservation.query.all()
             # TODO:possibly that the resulting query columns are not capable
 
-            if reservations_made is not None:  # There are reservations
+            if reservations_made:  # There are reservations
                 for room in rooms:
                     if check_room(reservations_made, room, date_start, date_end):
                         r = room
@@ -123,10 +119,14 @@ def make_reservation():
                     error = 'The room type selected is not available in that time period'
             else:  # No Reservations
                 r = rooms[0]
+                print(r)
 
-        if (error is not None) and (r is not None): # No errors and a room is selected
+        print(error)
+        print(r)
+        if not error:  # No errors and a room is selected
             # make the reservation
             res = HotelReservation(r.room_num, current_user.user_id, date_start, date_end)
+            print(res)
             db.session.add(res)
             db.session.commit()
             return render_template('reservation-confirmation.html', reservation=res)
