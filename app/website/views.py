@@ -1,4 +1,3 @@
-
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
@@ -6,7 +5,6 @@ from sqlalchemy.exc import IntegrityError
 
 from website import db
 from website.models import *
-import json
 
 views = Blueprint('views', __name__)
 
@@ -61,6 +59,26 @@ def sign_up():
 #
 #     return render_template('reservations.html', form=form, error=error, rooms_available=rooms)
 
+def check_dates(res_start, res_end, start, end):
+    earliest_end = min(res_end, end)
+    latest_start = max(res_start, start)
+    overlap = earliest_end - latest_start
+    return overlap  # + = overlap, 0 = same dates, - = no overlap
+
+
+def check_room(reservations, room, start, end):
+    for res in reservations:
+        # compare dates
+        no_overlap = (check_dates(res.check_in, res.check_out, start, end) < 0)
+        # check room numbers
+        diff_room = (res.room_num != room.room_num)
+        print("There is" + " no" if no_overlap else "" + "Overlap and They are" + " not " if diff_room else "" + " rooms")
+
+        if no_overlap or diff_room:
+            return True
+
+    return False
+
 
 # TODO: reserve a room
 @views.route('/reservations/make', methods=['GET', 'POST'])
@@ -73,31 +91,44 @@ def make_reservation():
         room_smoking = form.smoking.data
         date_start = form.start_date.data
         date_end = form.end_date.data
+        r = None
+
+        print("type: " + str(room_type))
+        print("smoke: " + str(room_smoking))
+        print("start: " + str(date_start))
+        print("end: " + str(date_end))
 
         if date_start > date_end:  # Error dates are backward
             error = "Cannot Reserve a negative time period.\n"
+        else:
+            # Check all rooms by description
+            rooms = HotelRoom.query.filter_by(room_type=room_type, smoking=room_smoking).all()
 
-        # Check all rooms by description
-        rooms = HotelRoom.query.filter_by(room_type=room_type, smoking=room_smoking).all()
+            # Joins and displays ALL HotelReservations with the Information of the Room
+            # filtered by the room_type and if it is smoking or not
+            reservations_made = HotelReservation.query.join(HotelRoom, HotelReservation.room_num == HotelRoom.room_num) \
+                .add_columns(HotelReservation.res_id, HotelReservation.check_in, HotelReservation.check_out,
+                             HotelRoom.room_num, HotelRoom.room_type, HotelRoom.smoking) \
+                .filter_by(room_type=room_type, smoking=room_smoking) \
+                .all()
 
-        # Joins and displays ALL HotelReservations with the Information of the Room
-        # filtered by the room_type and if it is smoking or not
-        reservations_made = HotelReservation.query.join(HotelRoom, HotelReservation.room_num == HotelRoom.room_num)\
-            .add_columns(HotelReservation.res_id, HotelReservation.check_in, HotelReservation.check_out,
-                         HotelRoom.room_num, HotelRoom.room_type, HotelRoom.smoking)\
-            .filter_by(room_type=room_type, smoking=room_smoking, check_in=date_start, check_out=date_end)\
-            .all()
+            if reservations_made is not None:  # There are reservations
+                for room in rooms:
+                    if check_room(reservations_made, room, date_start, date_end):
+                        r = room
+                        break
 
-        # if no reservations
-            # choose first room
-        # reservation is made
-            # is reservation under first room
+                if r is None:
+                    error = 'The room type selected is not available in that time period'
+            else:  # No Reservations
+                r = rooms[0]
 
-        if error is not None: # No errors
+        if (error is not None) and (r is not None): # No errors and a room is selected
             # make the reservation
             res = HotelReservation(r.room_num, current_user.user_id, date_start, date_end)
             db.session.add(res)
             db.session.commit()
+            return render_template('reservation-confirmation.html', reservation=res)
 
     return render_template('create-reservation.html', user=current_user.username, form=form, error=error)
 

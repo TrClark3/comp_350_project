@@ -1,0 +1,27 @@
+{% if is_logged_in %}
+  {% set loggedIn = True %}
+{% else %}
+  {% set loggedIn = False %}
+{% endif %}
+
+{% extends 'base.html' %}
+
+{% block title %} Thanks! {% endblock %}
+
+{% block navbars %} {{ super() }} {% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Thank You! You're all set.</h1>
+    <br>
+
+    <p> Reservation Number: {{ reservation.res_id }}</p>
+    <p> Room Number: {{ reservation.room_num }} </p>
+    <br>
+
+    <p> Check In Date: {{ reservation.check_in }} </p>
+    <p> Check Out Date: {{ reservation.check_out }} </p>
+    <br>
+
+</div>
+{% endblock %}
