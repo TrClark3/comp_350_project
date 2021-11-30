@@ -72,7 +72,6 @@ def check_room(reservations, room, start, end):
         no_overlap = (check_dates(res.check_in, res.check_out, start, end) < 0)
         # check room numbers
         diff_room = (res.room_num != room.room_num)
-        print("There is" + " no" if no_overlap else "" + "Overlap and They are" + " not " if diff_room else "" + " rooms")
 
         if no_overlap or diff_room:
             return True
@@ -93,11 +92,6 @@ def make_reservation():
         date_end = form.end_date.data
         r = None
 
-        print("type: " + str(room_type))
-        print("smoke: " + str(room_smoking))
-        print("start: " + str(date_start))
-        print("end: " + str(date_end))
-
         if date_start > date_end:  # Error dates are backward
             error = "Cannot Reserve a negative time period.\n"
         else:
@@ -107,7 +101,6 @@ def make_reservation():
             # Joins and displays ALL HotelReservations with the Information of the Room
             # filtered by the room_type and if it is smoking or not
             reservations_made = HotelReservation.query.all()
-            # TODO:possibly that the resulting query columns are not capable
 
             if reservations_made:  # There are reservations
                 for room in rooms:
@@ -119,14 +112,10 @@ def make_reservation():
                     error = 'The room type selected is not available in that time period'
             else:  # No Reservations
                 r = rooms[0]
-                print(r)
 
-        print(error)
-        print(r)
         if not error:  # No errors and a room is selected
             # make the reservation
             res = HotelReservation(r.room_num, current_user.user_id, date_start, date_end)
-            print(res)
             db.session.add(res)
             db.session.commit()
             return render_template('reservation-confirmation.html', reservation=res)
