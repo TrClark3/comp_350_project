@@ -80,14 +80,19 @@ def update_user(user_id):
     return "Wrong method type", 404
 
 
+@roomApi.route('/rooms', methods=['GET'])
 def get_reservations():
     reservations = HotelReservation.query.all()
     dump = rooms_schema.dump(reservations)
     return jsonify(dump), 200
 
 
+@roomApi.route('/room', methods=['GET'])
 def get_reservation(in_date, out_date):
-    return None
+    reservations = HotelReservation.query.filter_by(check_in=in_date, check_out=out_date).all()
+
+    dump = rooms_schema.dump(reservations)
+    return jsonify(dump), 200
 
 
 def delete_reservation():

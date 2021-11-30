@@ -1,3 +1,4 @@
+
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
@@ -68,23 +69,35 @@ def make_reservation():
     error = None
 
     if form.validate_on_submit():
+        room_type = form.room_type.data
+        room_smoking = form.smoking.data
+        date_start = form.start_date.data
+        date_end = form.end_date.data
 
-        room = HotelRoom.query.filter_by(room_type=form.room_type.data, smoking=form.smoking.data).first()
-        if room:
-            reservation = HotelReservation.query.filter_by(check_in=form.start_date.data,
-                                                           check_out=form.end_date.data).all()
-            if not reservation:
-                reservation = HotelReservation(room_num=room.room_num, cust_id=current_user.user_id,
-                                               check_in=form.start_date.data, check_out=form.end_date.data)
-                db.session.add(reservation)
-                db.session.commit()
-                return redirect(url_for('views.thanks'))
-            else:
-                # TODO: more info on the error messages
-                error = "A reservation is already made"
+        if date_start > date_end:  # Error dates are backward
+            error = "Cannot Reserve a negative time period.\n"
 
-        else:
-            error = "Room selected Is not available. Choose another."
+        # Check all rooms by description
+        rooms = HotelRoom.query.filter_by(room_type=room_type, smoking=room_smoking).all()
+
+        # Joins and displays ALL HotelReservations with the Information of the Room
+        # filtered by the room_type and if it is smoking or not
+        reservations_made = HotelReservation.query.join(HotelRoom, HotelReservation.room_num == HotelRoom.room_num)\
+            .add_columns(HotelReservation.res_id, HotelReservation.check_in, HotelReservation.check_out,
+                         HotelRoom.room_num, HotelRoom.room_type, HotelRoom.smoking)\
+            .filter_by(room_type=room_type, smoking=room_smoking, check_in=date_start, check_out=date_end)\
+            .all()
+
+        # if no reservations
+            # choose first room
+        # reservation is made
+            # is reservation under first room
+
+        if error is not None: # No errors
+            # make the reservation
+            res = HotelReservation(r.room_num, current_user.user_id, date_start, date_end)
+            db.session.add(res)
+            db.session.commit()
 
     return render_template('create-reservation.html', user=current_user.username, form=form, error=error)
 
