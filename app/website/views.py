@@ -111,6 +111,7 @@ def make_reservation():
                              HotelRoom.room_num, HotelRoom.room_type, HotelRoom.smoking) \
                 .filter_by(room_type=room_type, smoking=room_smoking) \
                 .all()
+            # TODO:possibly that the resulting query columns are not capable
 
             if reservations_made is not None:  # There are reservations
                 for room in rooms:
