@@ -3,7 +3,7 @@ from flask_login.mixins import AnonymousUserMixin
 from werkzeug.exceptions import abort
 from website import db, ma, login_manager, admin, views
 from flask_wtf import FlaskForm 
-from wtforms import StringField, PasswordField, BooleanField, DateField, SelectField
+from wtforms import StringField, PasswordField, BooleanField, DateField, SelectField, RadioField, TimeField
 from wtforms.validators import InputRequired, Email, Length
 from flask_login import UserMixin, current_user
 from flask_admin.contrib.sqla import ModelView
@@ -229,12 +229,25 @@ class ReservationForm(FlaskForm):
     smoking = BooleanField('Smoking')
     start_date = DateField('start date', validators=[InputRequired()])
     end_date = DateField('end date', validators=[InputRequired()])
-    username = StringField('Username', validators=[InputRequired(), Length(min=4,max=50)])
-    password = StringField('Password', validators=[InputRequired(), Length(min=4,max=50)])
-    payment_type = SelectField('Payment Type', choices=[('CC', 'Credit Card'), ('CASH', 'Cash'), ('CHECK', 'Check')])
-    payment_info = StringField('Payment Info', validators=[InputRequired(), Length(min=4,max=50)])
 
+class SpaReservationForm(FlaskForm):
+    # Bath Services (Cost: $2.50/min)
+    service1 = RadioField('Mineral Bath', choices=[('90', '90 minutes'), ('60', '60 minutes'), ('0', 'Neither')], default='0')
 
+    # Massage Services (Cost: $2.00/min)
+    service2a = RadioField('Swedish Message', choices=[('90', '90 minutes'), ('60', '60 minutes'), ('0', 'Neither')], default='0')
+    service2b = RadioField('Shiatsu Message', choices=[('90', '90 minutes'), ('60', '60 minutes'), ('0', 'Neither')], default='0')
+    service2c = RadioField('Deep Tissue Message', choices=[('90', '90 minutes'), ('60', '60 minutes'), ('0', 'Neither')], default='0')
+
+    # Specialty Services (Cost: $3.50/min)
+    service3a = RadioField('Hot Stone', choices=[('90', '90 minutes'), ('60', '60 minutes'), ('0', 'Neither')], default='0')
+    service3b = RadioField('Sugar Scrub', choices=[('90', '90 minutes'), ('60', '60 minutes'), ('0', 'Neither')], default='0')
+    service3c = RadioField('Herbal Body Wrap', choices=[('90', '90 minutes'), ('60', '60 minutes'), ('0', 'Neither')], default='0')
+    service3d = RadioField('Botanical Mud Wrap', choices=[('90', '90 minutes'), ('60', '60 minutes'), ('0', 'Neither')], default='0')
+
+    day = DateField('Choose Day', validators=[InputRequired()])
+    time = TimeField('Choose Time', validators=[InputRequired()])
+    
 class ReservationSearchForm(FlaskForm):
     start_date = DateField('start date', validators=[InputRequired()])
     end_date = DateField('end date', validators=[InputRequired()])
