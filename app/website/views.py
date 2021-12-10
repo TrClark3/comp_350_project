@@ -144,6 +144,7 @@ def services():
     return render_template('services.html', user=current_user.username, is_logged_in = is_logged_in)
 
 
+
 @views.route('/book-services')
 @login_required
 def book_services():
@@ -155,6 +156,10 @@ def information():
     is_logged_in = current_user.is_authenticated
     return render_template('information.html', user=current_user.username, is_logged_in = is_logged_in)
 
+@views.route('/menu')
+@login_required
+def menu():
+    return render_template('menu.html')
 
 # User log out, redirects to homepage (index.html)
 @views.route('/logout')
