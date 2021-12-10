@@ -80,6 +80,7 @@ def check_room(reservations, room, start, end):
 
 
 # TODO: reserve a room
+# NOTE: We should require login here and maybe not add a new customer session to the db? -Travis
 @views.route('/reservations/make', methods=['GET', 'POST'])
 def make_reservation():
     form = ReservationForm()
@@ -166,11 +167,32 @@ def services():
     return render_template('services.html', user=current_user.username, is_logged_in = is_logged_in)
 
 
-
-@views.route('/book-services')
+@views.route('/book-services', methods=['GET', 'POST'])
 @login_required
 def book_services():
-    return render_template('book-services.html', user=current_user.username)
+
+    form = SpaReservationForm()
+
+    error = None
+
+    if form.validate_on_submit():
+
+        # If total minutes of services exceeds 300 minutes or is 0 throw error. I'm aware of how terribly this is implemented lol ;(
+        if (int(form.service1.data) + int(form.service2a.data) + int(form.service2b.data)
+        + int(form.service2c.data) + int(form.service3a.data) + int(form.service3b.data) + int(form.service3c.data) + int(form.service3d.data)) > 300:
+
+            error = 'Services booked cannot exceed 300 minutes in one day, please book additional services for next available day!'
+
+        elif (int(form.service1.data) + int(form.service2a.data) + int(form.service2b.data)
+        + int(form.service2c.data) + int(form.service3a.data) + int(form.service3b.data) + int(form.service3c.data) + int(form.service3d.data)) == 0:
+
+            error = 'Please choose a service to continue with booking.'
+
+        else:
+            return redirect(url_for('views.thanks'))
+            
+
+    return render_template('book-services.html', user=current_user.username, form=form, error=error)
 
 
 @views.route('/information')
@@ -248,3 +270,8 @@ def admin_login():
 @login_required
 def admin_home():
     return redirect(url_for('admin.index'))
+
+@views.route('/view-reservations')
+@login_required
+def view_reservations():
+    return render_template('view-reservations.html', user=current_user.username)

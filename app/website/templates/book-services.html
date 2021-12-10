@@ -1,27 +1,115 @@
 <!-- uses user nav -->
 {% set loggedIn = True %}
 {% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %} Book Services {% endblock %}
+{% block title %} Book Spa Services {% endblock %}
 
 {% block navbars %} {{ super() }} {% endblock %}
 
 {% block content %}
 <div  style="margin-left:1em">
-  <h3>Services to Book</h3><hr><br>
+  <h1>Spa Services</h1><br>
 
-  <h5>Bath Services </h5>
-  60 or 90 minute mineral bath - $2.50/minute<br><br>
+  <h3>Please fill out the form below with your choices of the services we offer!</h3>
 
-  <h5>Massage Services </h5>
-  60 or 90 minute Swedish massage - $2.00/minute<br>
-  60 or 90 minute shiatsu massage - $2.00/minute<br>
-  60 or 90 minute deep tissue massage - $2.00/minute<br><br>
+  <form class="form-customer-info" method="POST">
+    {{ form.hidden_tag() }}
+    <h5>Bath Services $2.50/minute</h5>
 
-  <h5>Specialty Treatment Services </h5>
-  60 or 90 minute hot stone treatment - $3.50/minute<br>
-  60 or 90 minute sugar scrub treatment - $3.50/minute<br>
-  60 or 90 minute herbal body wrap treatment - $3.50/minute<br>
-  60 or 90 minute botanical mud wrap treatment - $3.50/minute
+    <p> Mineral Bath
+      <!-- Iterates through 60 and 90 min options literally just so they'll render horizontally bc pretty -->
+      {% for duration in form.service1 %}
+        <tr>
+          <td>{{ duration }}</td>
+          <td>{{ duration.label }}</td>
+        </tr>
+      {% endfor %}
+    </p>
+    <br>
+
+    <h5>Massage Services $2.00/minute</h5>
+
+    <p> Swedish 
+    {% for duration in form.service2a %}
+    <tr>
+      <td>{{ duration }}</td>
+      <td>{{ duration.label }}</td>
+    </tr>
+    {% endfor %}
+    </p>
+
+    <p> Shiatsu
+    {% for duration in form.service2b %}
+    <tr>
+      <td>{{ duration }}</td>
+      <td>{{ duration.label }}</td>
+    </tr>
+    {% endfor %}
+    </p>
+
+    <p> Deep Tissue 
+    {% for duration in form.service2c %}
+    <tr>
+      <td>{{ duration }}</td>
+      <td>{{ duration.label }}</td>
+    </tr>
+    {% endfor %}
+    </p>
+    <br>
+
+    <h5>Specialty Treatments $3.50/minute</h5>
+
+    <p> Hot Stone  
+      {% for duration in form.service3a %}
+      <tr>
+        <td>{{ duration }}</td>
+        <td>{{ duration.label }}</td>
+      </tr>
+      {% endfor %}
+      </p>
+  
+      <p> Sugar Scrub
+      {% for duration in form.service3b %}
+      <tr>
+        <td>{{ duration }}</td>
+        <td>{{ duration.label }}</td>
+      </tr>
+      {% endfor %}
+      </p>
+  
+      <p> Herbal Body Wrap
+      {% for duration in form.service3c %}
+      <tr>
+        <td>{{ duration }}</td>
+        <td>{{ duration.label }}</td>
+      </tr>
+      {% endfor %}
+      </p>
+
+      <p> Botanical Mud Wrap
+        {% for duration in form.service3d %}
+        <tr>
+          <td>{{ duration }}</td>
+          <td>{{ duration.label }}</td>
+        </tr>
+        {% endfor %}
+        </p>
+
+      {{ wtf.form_field(form.day) }}
+      {{ wtf.form_field(form.time) }}
+
+        {{ total }}
+        {% if error %}
+        <p class="error"><strong>Error: </strong> {{ error }} </p>
+        {% endif %}
+      
+    <br>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Make Reservation</button>
+    <button class="btn btn-lg btn-secondary btn-block" type="reset">Clear Form</button>
+</form>
+
+
 </div>
+
   {% endblock %}
