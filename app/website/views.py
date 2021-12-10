@@ -1,4 +1,3 @@
-from re import A
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
@@ -15,7 +14,8 @@ views = Blueprint('views', __name__)
 @views.route('/home')
 @views.route('/')
 def home():
-    return render_template('index.html')
+    is_logged_in = current_user.is_authenticated
+    return render_template('index.html', user=current_user.username, is_logged_in = is_logged_in)
 
 
 # SignUp Page. Uses sign-up.html
@@ -34,7 +34,7 @@ def sign_up():
 
         # Create new user from form data
         new_user = User(username=form.username.data, password=hashed_password,
-                        first=form.f_name.data, last=form.l_name.data, age=0, is_admin=False)
+                        first=form.f_name.data, last=form.l_name.data, pay_type="CASH", pay_info="0", is_admin=False)
 
         # Add user to database, if username doesn't already exist
         try:
@@ -75,9 +75,9 @@ def make_reservation():
 
         # TODO: fix bug where it creats multiple customers
         # might be password hashes not matching causing it to make a new customer
-        cust = Customer.query.filter_by(username=username, password=password).all()
+        cust = User.query.filter_by(username=username, password=password).all()
         if not cust:
-            cust = Customer(username, password, ptype, pinfo)
+            cust = User(username, password, ptype, pinfo)
             db.session.add(cust)
             db.session.commit()
 
@@ -86,7 +86,7 @@ def make_reservation():
             reservation = HotelReservation.query.filter_by(check_in=form.start_date.data,
                                                            check_out=form.end_date.data).all()
             if not reservation:
-                reservation = HotelReservation(room_num=room.room_num, cust_id=cust.cust_id,
+                reservation = HotelReservation(room_num=room.room_num, user_id=cust.user_id,
                                                check_in=form.start_date.data, check_out=form.end_date.data)
                 db.session.add(reservation)
                 db.session.commit()
@@ -98,13 +98,14 @@ def make_reservation():
         else:
             error = "Room selected Is not available. Choose another."
 
-    return render_template('create-reservation.html', form=form, error=error)
+    return render_template('create-reservation.html', user=current_user.username, form=form, error=error)
 
 
 # Sign up completed successfully. Uses thanks.html
 @views.route('/thanks')
 def thanks():
-    return render_template('thanks.html')
+    is_logged_in = current_user.is_authenticated
+    return render_template('thanks.html', user=current_user.username, is_logged_in = is_logged_in)
 
 
 # Login Page. Uses login.html
@@ -114,7 +115,7 @@ def log_in():
     # Create form from LoginForm class in models.py
     form = LoginForm()
     # Holds possible error message during log in process
-    error = None
+    errors = None
 
     if form.validate_on_submit():
 
@@ -125,9 +126,9 @@ def log_in():
                 login_user(user, remember=form.remember.data)
                 return redirect(url_for('views.user_dashboard'))
             
-        error = "Username or password is incorrect. Please try again."
+        errors = "Username or password is incorrect. Please try again."
             
-    return render_template('login.html', form=form, error=error)
+    return render_template('login.html', form=form, error=errors)
 
 
 # User's dashboard page. Uses user-dashboard.html
@@ -138,21 +139,21 @@ def user_dashboard():
 
 
 @views.route('/services')
-@login_required
 def services():
-    return render_template('services.html')
+    is_logged_in = current_user.is_authenticated
+    return render_template('services.html', user=current_user.username, is_logged_in = is_logged_in)
 
 
 @views.route('/book-services')
 @login_required
 def book_services():
-    return render_template('book-services.html')
+    return render_template('book-services.html', user=current_user.username)
 
 
 @views.route('/information')
-@login_required
 def information():
-    return render_template('information.html')
+    is_logged_in = current_user.is_authenticated
+    return render_template('information.html', user=current_user.username, is_logged_in = is_logged_in)
 
 
 # User log out, redirects to homepage (index.html)
@@ -173,8 +174,8 @@ def admin_init():
 
     if form.validate_on_submit():
         if form.username.data == "admin" and form.password.data == "password":
-            admin_user = User(username='admin', password="password", first="root", last="root", age=100,
-                              is_admin=True)
+            admin_user = User(username='admin', password="password", first="root", last="root",
+            pay_type="CASH", pay_info="0", is_admin=True)
             # Add admin user to database, if it doesn't already exist
             try:
                 db.session.add(admin_user)
@@ -188,7 +189,7 @@ def admin_init():
         else:
             error = "Wrong admin credentials."
             
-    return render_template('admin-init.html', form=form, error=error)
+    return render_template('admin/admin-init.html', form=form, error=error)
 
 
 # Admin login (Step 2/2)
@@ -207,12 +208,16 @@ def admin_login():
 
             if admin:
                 login_user(admin)
-                return redirect(url_for('admin.index'))
+                return redirect(url_for('views.admin_home'))
             flash("Admin account not yet created. Please perform Admin Initialization step first.", "warning")    
             return redirect(url_for('views.admin_login'))
 
         else:
             error = "Wrong admin credentials."
             
-    return render_template('admin-login.html', form=form, error=error)
+    return render_template('admin/admin-login.html', form=form, error=error)
 
+@views.route('/admin')
+@login_required
+def admin_home():
+    return redirect(url_for('admin.index'))
