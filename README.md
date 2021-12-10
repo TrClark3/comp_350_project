@@ -1,5 +1,3 @@
-Hello World!
-
 # Directory
 
 * [directory](https://github.com/TrClark3/comp_350_project#directory)
