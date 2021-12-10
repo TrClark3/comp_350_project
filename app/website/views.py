@@ -5,7 +5,6 @@ from sqlalchemy.exc import IntegrityError
 
 from website import db
 from website.models import *
-import json
 
 views = Blueprint('views', __name__)
 
@@ -60,6 +59,25 @@ def sign_up():
 #
 #     return render_template('reservations.html', form=form, error=error, rooms_available=rooms)
 
+def check_dates(res_start, res_end, start, end):
+    earliest_end = min(res_end, end)
+    latest_start = max(res_start, start)
+    overlap = (earliest_end - latest_start).days + 1
+    return overlap  # + = overlap, 0 = same dates, - = no overlap
+
+
+def check_room(reservations, room, start, end):
+    for res in reservations:
+        # compare dates
+        no_overlap = (check_dates(res.check_in, res.check_out, start, end) < 0)
+        # check room numbers
+        diff_room = (res.room_num != room.room_num)
+
+        if no_overlap or diff_room:
+            return True
+
+    return False
+
 
 # TODO: reserve a room
 @views.route('/reservations/make', methods=['GET', 'POST'])
@@ -68,35 +86,39 @@ def make_reservation():
     error = None
 
     if form.validate_on_submit():
-        username = form.username.data
-        password = generate_password_hash(form.password.data)
-        ptype = form.payment_type.data
-        pinfo = form.payment_info.data
+        room_type = form.room_type.data
+        room_smoking = form.smoking.data
+        date_start = form.start_date.data
+        date_end = form.end_date.data
+        r = None
 
-        # TODO: fix bug where it creats multiple customers
-        # might be password hashes not matching causing it to make a new customer
-        cust = User.query.filter_by(username=username, password=password).all()
-        if not cust:
-            cust = User(username, password, ptype, pinfo)
-            db.session.add(cust)
-            db.session.commit()
-
-        room = HotelRoom.query.filter_by(room_type=form.room_type.data, smoking=form.smoking.data).first()
-        if room:
-            reservation = HotelReservation.query.filter_by(check_in=form.start_date.data,
-                                                           check_out=form.end_date.data).all()
-            if not reservation:
-                reservation = HotelReservation(room_num=room.room_num, user_id=cust.user_id,
-                                               check_in=form.start_date.data, check_out=form.end_date.data)
-                db.session.add(reservation)
-                db.session.commit()
-                return redirect(url_for('views.thanks'))
-            else:
-                # TODO: more info on the error messages
-                error = "A reservation is already made"
-
+        if date_start > date_end:  # Error dates are backward
+            error = "Cannot Reserve a negative time period.\n"
         else:
-            error = "Room selected Is not available. Choose another."
+            # Check all rooms by description
+            rooms = HotelRoom.query.filter_by(room_type=room_type, smoking=room_smoking).all()
+
+            # Joins and displays ALL HotelReservations with the Information of the Room
+            # filtered by the room_type and if it is smoking or not
+            reservations_made = HotelReservation.query.all()
+
+            if reservations_made:  # There are reservations
+                for room in rooms:
+                    if check_room(reservations_made, room, date_start, date_end):
+                        r = room
+                        break
+
+                if r is None:
+                    error = 'The room type selected is not available in that time period'
+            else:  # No Reservations
+                r = rooms[0]
+
+        if not error:  # No errors and a room is selected
+            # make the reservation
+            res = HotelReservation(r.room_num, current_user.user_id, date_start, date_end)
+            db.session.add(res)
+            db.session.commit()
+            return render_template('reservation-confirmation.html', reservation=res)
 
     return render_template('create-reservation.html', user=current_user.username, form=form, error=error)
 
